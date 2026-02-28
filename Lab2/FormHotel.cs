@@ -5,15 +5,14 @@ namespace Lab2;
 /// <summary>
 /// Класс формы
 /// </summary>
-public partial class Form1 : Form
+public partial class FormHotel : Form
 {
     private Hotel _hotel;
     private Hotel? _editingHotel = null;
 
     private HotelsHashtableCollection hotels;
     private HotelsCollectionListener? listener;
-
-
+    
     // Импорт MessageBoxW из библиотеки user32.dll, строки передаются как Unicode
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     private static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
@@ -45,7 +44,7 @@ public partial class Form1 : Form
     /// <summary>
     /// Конструктор формы
     /// </summary>
-    public Form1()
+    public FormHotel()
     {
         InitializeComponent();
 
@@ -97,15 +96,22 @@ public partial class Form1 : Form
     /// <param name="operation"> Название операции </param>
     /// <param name="htTime"> Время операции </param>
     /// <param name="listTime"> Разница во времени между двумя коллекциями </param>
-    private void AddTestRow(string operation, long htTime, long arrayTime)
+    private void AddTestRow(string operation, long htNs, long arrayNs)
     {
+        string FormatTime(long ns)
+        {
+            if (ns >= 1_000_000) return $"{ns / 1_000_000.0:F1} мс";
+            if (ns >= 1_000) return $"{ns / 1_000.0:F0} мкс";
+            return $"{ns} нс";
+        }
+
         var item = new ListViewItem(operation);
-        item.SubItems.Add($"{htTime} мс");
-        item.SubItems.Add($"{arrayTime} мс");
-        item.SubItems.Add($"{arrayTime - htTime:+0;-0} мс");
+        item.SubItems.Add(FormatTime(htNs));      
+        item.SubItems.Add(FormatTime(arrayNs));   
+        item.SubItems.Add(FormatTime(arrayNs - htNs)); 
         listView1.Items.Add(item);
     }
-
+    
     /// <summary>
     /// Обработка нажатия кнопки выхода
     /// </summary>
@@ -563,10 +569,8 @@ public partial class Form1 : Form
     }
 
     /// <summary>
-    /// Обработка нажатия кнопки теста
+    /// Обработчик кнопки теста
     /// </summary>
-    /// <param name="sender"> Объект, вызвавший событие </param>
-    /// <param name="e"> Информация о событии </param>
     private void buttonTest_Click(object sender, EventArgs e)
     {
         listView1.Items.Clear();
@@ -577,9 +581,10 @@ public partial class Form1 : Form
         listView1.Columns.Add("Array", 100);
         listView1.Columns.Add("Разница", 100);
 
+        // Генерация 
         var hotels = PerformanceTest.GenerateUniqueHotels(100000);
         var hotelsArray = new Hotel[100000];
-
+    
         // Вставка
         var htInsert = new HotelsHashtableCollection();
         long htInsertTime = PerformanceTest.MeasureInsert(htInsert, hotels);
@@ -589,17 +594,20 @@ public partial class Form1 : Form
         // Последовательная выборка
         var htSeq = new HotelsHashtableCollection();
         PerformanceTest.InsertUniqueHotels(htSeq, hotels);
-        Array.Copy(hotels.ToArray(), hotelsArray, 100000);
+        Array.Copy(hotels, hotelsArray, 100000);
         long htSeqTime = PerformanceTest.MeasureSeqGet(htSeq);
         long arraySeqTime = PerformanceTest.MeasureArraySeqGet(hotelsArray);
-        AddTestRow("Посл. выборка", htSeqTime, arraySeqTime);
+        AddTestRow("Послед. 100k", htSeqTime, arraySeqTime);
 
         // Случайная выборка
-        var names = hotels.Select(h => h.Name).ToList();
+        var names = new string[hotels.Length];
+        for (int i = 0; i < hotels.Length; i++)
+            names[i] = hotels[i].Name;
+    
         var htRand = new HotelsHashtableCollection();
         PerformanceTest.InsertUniqueHotels(htRand, hotels);
         long htRandTime = PerformanceTest.MeasureRandGet(htRand, names);
         long arrayRandTime = PerformanceTest.MeasureArrayRandGet(hotelsArray);
-        AddTestRow("Случай. доступ", htRandTime, arrayRandTime);
+        AddTestRow("Случай. 100k", htRandTime, arrayRandTime);
     }
 }

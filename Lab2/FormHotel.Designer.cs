@@ -1,6 +1,6 @@
 ﻿﻿namespace Lab2;
 
-partial class Form1
+partial class FormHotel
 {
     private System.ComponentModel.IContainer components = null;
     
@@ -306,10 +306,11 @@ partial class Form1
         listView1.TabIndex = 1;
         listView1.UseCompatibleStateImageBehavior = false;
         // 
-        // Form1
+        // FormHotel
         // 
         ClientSize = new System.Drawing.Size(913, 649);
         Controls.Add(tableLayoutPanel1);
+        Name = "FormHotel";
         Text = "Создание гостиницы";
         tableLayoutPanel1.ResumeLayout(false);
         panel1.ResumeLayout(false);

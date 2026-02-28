@@ -15,6 +15,6 @@ static class Program
         Console.InputEncoding = Encoding.UTF8;
 
         ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
+        Application.Run(new FormHotel());
     }
 }

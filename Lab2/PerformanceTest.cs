@@ -1,131 +1,128 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Lab2;
 
 namespace Lab2
 {
     /// <summary>
-    /// Класс для тестирования производительности коллекций
+    /// Класс для тестирования производительности 
     /// </summary>
     public static class PerformanceTest
     {
         private static readonly Random rand = new Random(42);
+        private const long TICKS_PER_NS = 10;
 
         /// <summary>
-        /// Генерация уникальных гостиниц
+        /// Генерация уникальных гостиниц (массив)
         /// </summary>
-        /// <param name="count"> Количество гостиниц </param>
-        /// <returns> Список с гостиницами </returns>
-        public static List<Hotel> GenerateUniqueHotels(int count)
+        public static Hotel[] GenerateUniqueHotels(int count)
         {
-            var result = new List<Hotel>(count);
-            for (int i = 1; i <= count; i++)
+            var result = new Hotel[count];
+            for (int i = 0; i < count; i++)
             {
                 string name = $"Hotel{i:D6}";
-                result.Add(new Hotel(name, rand.Next(0, 101), rand.Next(10, 201),
+                result[i] = new Hotel(name, rand.Next(0, 101), rand.Next(10, 201),
                     1000m + rand.Next(0, 5000), $"Адрес {i}",
-                    1.0 + rand.NextDouble() * 4, rand.NextDouble() > 0.5));
+                    1.0 + rand.NextDouble() * 4, rand.NextDouble() > 0.5);
             }
 
             return result;
         }
 
         /// <summary>
-        /// Замер времени вставки
+        /// Замер вставки в HashTable
         /// </summary>
-        /// <param name="ht"> Коллекция HashTable </param>
-        /// <param name="hotels"> Коллекция Array </param>
-        /// <returns> Время в милисекундах </returns>
-        public static long MeasureInsert(HotelsHashtableCollection ht, List<Hotel> hotels)
+        public static long MeasureInsert(HotelsHashtableCollection ht, Hotel[] hotels)
         {
             var sw = Stopwatch.StartNew();
-            foreach (var h in hotels) ht.Add(h);
+            for (int i = 0; i < hotels.Length; i++)
+                ht.Add(hotels[i]);
             sw.Stop();
             ht.Clear();
-            return sw.ElapsedMilliseconds;
+            return sw.ElapsedTicks / TICKS_PER_NS;
         }
 
         /// <summary>
-        /// Вставка уникальных гостиниц
+        /// Вставка уникальных гостиниц в HashTable
         /// </summary>
-        /// <param name="ht"> Коллекция HashTable</param>
-        /// <param name="hotels"> Коллекция List </param>
-        public static void InsertUniqueHotels(HotelsHashtableCollection ht, List<Hotel> hotels)
+        public static void InsertUniqueHotels(HotelsHashtableCollection ht, Hotel[] hotels)
         {
-            foreach (var h in hotels) ht.Add(h);
+            for (int i = 0; i < hotels.Length; i++)
+                ht.Add(hotels[i]);
         }
 
         /// <summary>
-        /// Замер последовательной выборки
+        /// Замер последовательной выборки из HashTable 
         /// </summary>
-        /// <param name="ht"> Коллекция HashTable </param>
-        /// <returns> Время в милисекундах </returns>
         public static long MeasureSeqGet(HotelsHashtableCollection ht)
         {
-            long total = 0;
-            for (int repeat = 0; repeat < 100; repeat++)
+            long totalTicks = 0;
+            const int REPEATS = 100;
+            for (int repeat = 0; repeat < REPEATS; repeat++)
             {
                 var sw = Stopwatch.StartNew();
-                foreach (var h in ht.Values) _ = h.Name;
+                foreach (var h in ht.Values)
+                    _ = h.Name;
                 sw.Stop();
-                total += sw.ElapsedMilliseconds;
+                totalTicks += sw.ElapsedTicks;
             }
 
-            return total / 100;
+            return (totalTicks / REPEATS) / TICKS_PER_NS;
         }
 
         /// <summary>
-        /// Замер случайной выборки
+        /// Замер случайной выборки из HashTable 
         /// </summary>
-        /// <param name="ht"> Коллекция HashTable </param>
-        /// <param name="names"> Коллекция ключей </param>
-        /// <returns> Время в милисекундах </returns>
-        public static long MeasureRandGet(HotelsHashtableCollection ht, List<string> names)
+        public static long MeasureRandGet(HotelsHashtableCollection ht, string[] names)
         {
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 100000; i++)
-                _ = ht[names[rand.Next(names.Count)]]?.Name;
+                _ = ht[names[rand.Next(names.Length)]]?.Name;
             sw.Stop();
-            return sw.ElapsedMilliseconds;
+            return sw.ElapsedTicks / TICKS_PER_NS;
         }
 
         /// <summary>
-        /// Замер вставки
+        /// Замер вставки в массив 
         /// </summary>
-        /// <param name="array"> Массив </param>
-        /// <param name="hotels"> Коллекция List </param>
-        /// <returns> Время в милисекундах </returns>
-        public static long MeasureArrayInsert(Hotel[] array, List<Hotel> hotels)
+        public static long MeasureArrayInsert(Hotel[] array, Hotel[] hotels)
         {
-            var sw = Stopwatch.StartNew();
-            Array.Copy(hotels.ToArray(), array, hotels.Count);
-            sw.Stop();
-            Array.Clear(array, 0, array.Length);
-            return sw.ElapsedMilliseconds;
+            long totalTicks = 0;
+            const int REPEATS = 10;
+            for (int repeat = 0; repeat < REPEATS; repeat++)
+            {
+                var sw = Stopwatch.StartNew();
+                Array.Copy(hotels, array, hotels.Length);
+                sw.Stop();
+                totalTicks += sw.ElapsedTicks;
+                Array.Clear(array, 0, array.Length);
+            }
+
+            return (totalTicks / REPEATS) / TICKS_PER_NS;
         }
 
         /// <summary>
-        /// Замер последовательной выборки
+        /// Замер последовательной выборки из массива 
         /// </summary>
-        /// <param name="array"> Массив </param>
-        /// <returns> Время в милисекундах </returns>
         public static long MeasureArraySeqGet(Hotel[] array)
         {
-            var sw = Stopwatch.StartNew();
-            for (int i = 0; i < array.Length; i++)
-                _ = array[i]?.Name;
-            sw.Stop();
-            return sw.ElapsedMilliseconds;
+            long totalTicks = 0;
+            const int REPEATS = 100;
+            for (int repeat = 0; repeat < REPEATS; repeat++)
+            {
+                var sw = Stopwatch.StartNew();
+                for (int i = 0; i < array.Length; i++)
+                    _ = array[i]?.Name;
+                sw.Stop();
+                totalTicks += sw.ElapsedTicks;
+            }
+
+            return (totalTicks / REPEATS) / TICKS_PER_NS;
         }
 
         /// <summary>
-        /// Замер случайной выборки
+        /// Замер случайной выборки из массива 
         /// </summary>
-        /// <param name="array"> Массив </param>
-        /// <returns> Время в милисекундах </returns>
         public static long MeasureArrayRandGet(Hotel[] array)
         {
             var sw = Stopwatch.StartNew();
@@ -136,7 +133,7 @@ namespace Lab2
             }
 
             sw.Stop();
-            return sw.ElapsedMilliseconds;
+            return sw.ElapsedTicks / TICKS_PER_NS;
         }
     }
 }
