@@ -92,6 +92,14 @@ public partial class Form1 : Form
         }
     }
 
+    private void AddTestRow(string operation, long htTime, long listTime)
+    {
+        var item = new ListViewItem(operation);
+        item.SubItems.Add($"{htTime} мс");
+        item.SubItems.Add($"{listTime} мс");
+        item.SubItems.Add($"{listTime - htTime:+0;-0} мс");
+        listView1.Items.Add(item);
+    }
 
     /// <summary>
     /// Обработка нажатия кнопки выхода
@@ -110,6 +118,7 @@ public partial class Form1 : Form
         }
     }
 
+    
     /// <summary>
     /// Обработка нажатия кнопки редактирования
     /// </summary>
@@ -556,6 +565,50 @@ public partial class Form1 : Form
             ShowUser32Error($"Неверный формат числа в '{fieldName}'."); // user32.dll
             result = 0;
             return false;
+        }
+    }
+
+    private void buttonTest_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            // Очистка и настройка колонок
+            listView1.Items.Clear();
+            listView1.View = View.Details;
+            listView1.Columns.Clear();
+            listView1.Columns.Add("Операция", 150);
+            listView1.Columns.Add("Hashtable", 120);
+            listView1.Columns.Add("Array", 100);
+            listView1.Columns.Add("Разница", 100);
+
+            // ✅ РЕАЛЬНЫЕ ТЕСТЫ (5-10 сек)
+            var hotels = PerformanceTest.GenerateUniqueHotels(100000);
+            var names = hotels.Select(h => h.Name).ToList();
+
+            // 1. ВСТАВКА
+            var htInsert = new HotelsHashtableCollection();
+            var listInsert = new List<Hotel>();
+            long htInsertTime = PerformanceTest.MeasureInsert(htInsert, hotels);
+            long listInsertTime = PerformanceTest.MeasureInsert(listInsert, hotels);
+            AddTestRow("Вставка 100k", htInsertTime, listInsertTime);
+
+            // 2. ПОСЛЕДОВАТЕЛЬНАЯ ВЫБОРКА
+            var htSeq = new HotelsHashtableCollection();
+            var listSeq = new List<Hotel>();
+            PerformanceTest.InsertUniqueHotels(htSeq, hotels);
+            PerformanceTest.InsertUniqueHotels(listSeq, hotels);
+            long htSeqTime = PerformanceTest.MeasureSeqGet(htSeq);
+            long listSeqTime = PerformanceTest.MeasureSeqListGet(listSeq);
+            AddTestRow("Посл. выборка", htSeqTime, listSeqTime);
+
+            // 3. СЛУЧАЙНАЯ ВЫБОРКА
+            long htRandTime = PerformanceTest.MeasureRandGet(htSeq, names);
+            long listRandTime = PerformanceTest.MeasureRandListGet(listSeq, names);
+            AddTestRow("Случай. выборка", htRandTime, listRandTime);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка теста: {ex.Message}\n\nПроверьте:\n1. Добавлен Clear() в HotelsHashtableCollection\n2. PerformanceTest.cs скомпилирован", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

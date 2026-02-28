@@ -68,6 +68,8 @@ partial class Form1
         buttonExit = new System.Windows.Forms.Button();
         tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
         panel1 = new System.Windows.Forms.Panel();
+        buttonTest = new System.Windows.Forms.Button();
+        listView1 = new System.Windows.Forms.ListView();
         tableLayoutPanel1.SuspendLayout();
         panel1.SuspendLayout();
         SuspendLayout();
@@ -247,6 +249,7 @@ partial class Form1
         tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 700F));
         tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
         tableLayoutPanel1.Controls.Add(panel1, 1, 1);
+        tableLayoutPanel1.Controls.Add(listView1, 1, 2);
         tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
         tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -260,6 +263,7 @@ partial class Form1
         // panel1
         // 
         panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
+        panel1.Controls.Add(buttonTest);
         panel1.Controls.Add(flowHotels);
         panel1.Controls.Add(textBoxName);
         panel1.Controls.Add(buttonExit);
@@ -284,6 +288,24 @@ partial class Form1
         panel1.Size = new System.Drawing.Size(656, 394);
         panel1.TabIndex = 0;
         // 
+        // buttonTest
+        // 
+        buttonTest.Location = new System.Drawing.Point(234, 246);
+        buttonTest.Name = "buttonTest";
+        buttonTest.Size = new System.Drawing.Size(113, 31);
+        buttonTest.TabIndex = 18;
+        buttonTest.Text = "Тест";
+        buttonTest.UseVisualStyleBackColor = true;
+        buttonTest.Click += buttonTest_Click;
+        // 
+        // listView1
+        // 
+        listView1.Location = new System.Drawing.Point(109, 527);
+        listView1.Name = "listView1";
+        listView1.Size = new System.Drawing.Size(694, 110);
+        listView1.TabIndex = 1;
+        listView1.UseCompatibleStateImageBehavior = false;
+        // 
         // Form1
         // 
         ClientSize = new System.Drawing.Size(913, 649);
@@ -294,6 +316,10 @@ partial class Form1
         panel1.PerformLayout();
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.ListView listView1;
+
+    private System.Windows.Forms.Button buttonTest;
 
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.Button buttonExit;
