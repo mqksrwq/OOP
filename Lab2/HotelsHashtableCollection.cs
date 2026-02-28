@@ -1,13 +1,17 @@
 ﻿// HotelsHashtableCollection.cs
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Lab2
 {
-    // Пользовательский делегат для события изменений (требование лабы)
+    // Делегат для события изменений 
     public delegate void HotelsChangedHandler(object sender, HotelsChangedEventArgs e);
 
+    /// <summary>
+    /// Класс коллекции гостиниц типа HashTable
+    /// </summary>
     public class HotelsHashtableCollection
     {
         private readonly Hashtable _items = new Hashtable();
@@ -16,6 +20,13 @@ namespace Lab2
         public event HotelsChangedHandler? Changed;
 
         public int Count => _items.Count;
+
+        /// <summary>
+        /// Добавление гостиницы в коллекцию
+        /// </summary>
+        /// <param name="hotel"> Гостиница </param>
+        /// <exception cref="ArgumentException"> Поле не прошло валидацию </exception>
+        /// <exception cref="InvalidOperationException"> Ошибка операции </exception>
         public void Add(Hotel hotel)
         {
             if (string.IsNullOrWhiteSpace(hotel.Name))
@@ -25,9 +36,15 @@ namespace Lab2
                 throw new InvalidOperationException($"Отель с ключом '{hotel.Name}' уже существует");
 
             _items.Add(hotel.Name, hotel);
-            Changed?.Invoke(this, new HotelsChangedEventArgs("Added", hotel.Name, hotel, $"Добавлен отель: {hotel.Name}"));
+            Changed?.Invoke(this,
+                new HotelsChangedEventArgs("Added", hotel.Name, hotel, $"Добавлен отель: {hotel.Name}"));
         }
 
+        /// <summary>
+        /// Удаление гостиницы из коллекции
+        /// </summary>
+        /// <param name="name"> Имя гостиницы </param>
+        /// <returns></returns>
         public bool Remove(string name)
         {
             if (!_items.ContainsKey(name)) return false;
@@ -38,6 +55,9 @@ namespace Lab2
             return true;
         }
 
+        /// <summary>
+        /// Очищение коллекции
+        /// </summary>
         public void Clear()
         {
             _items.Clear();
@@ -56,13 +76,12 @@ namespace Lab2
                 if (!_items.ContainsKey(key))
                     throw new KeyNotFoundException($"Ключ '{key}' не найден");
 
-                _items[key] = value;  // <-- ДОБАВИТЬ!
+                _items[key] = value;
                 Changed?.Invoke(this, new HotelsChangedEventArgs("Updated", key, value, $"Обновлён: {key}"));
             }
         }
 
-
-        // Для вывода в RenderHotels
+        // Вывод в методе RenderHotels
         public IEnumerable<Hotel> Values
         {
             get

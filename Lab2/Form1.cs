@@ -48,20 +48,19 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
-        
+
         hotels = new HotelsHashtableCollection();
         listener = new HotelsCollectionListener(hotels);
-    
-        // Подписка на автообновление UI
+
+        // Автообновление UI
         hotels.Changed += (_, e) => this.Invoke(new Action(() => RenderHotels()));
 
         MessageBox.Show(this,
             "Лабораторная №1 - Вариант 9 (Гостиница)\n\nГруппа 24ВП1 - Студенты: Бояркин Максим и Мишин Артём",
             "Привет!!");
-        
+
         MinimumSize = new Size(700, 400);
         RenderHotels();
-        // tableLayoutPanel1.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
     }
 
     /// <summary>
@@ -73,13 +72,13 @@ public partial class Form1 : Form
     {
         try
         {
-            if (!TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms, 
+            if (!TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms,
                     out decimal pricePerDay, out string address, out double rating, out bool hasFreeWiFi))
                 return;
 
             Hotel newHotel = new Hotel(name, occupiedRooms, totalRooms, pricePerDay, address, rating, hasFreeWiFi);
-            hotels.Add(newHotel);  // Добавит + события сработают автоматически
-        
+            hotels.Add(newHotel);
+
             ClearFormFields();
         }
         catch (HotelOverflowException ex)
@@ -92,12 +91,18 @@ public partial class Form1 : Form
         }
     }
 
-    private void AddTestRow(string operation, long htTime, long listTime)
+    /// <summary>
+    /// Добавляет строку с результатами теста в таблицу
+    /// </summary>
+    /// <param name="operation"> Название операции </param>
+    /// <param name="htTime"> Время операции </param>
+    /// <param name="listTime"> Разница во времени между двумя коллекциями </param>
+    private void AddTestRow(string operation, long htTime, long arrayTime)
     {
         var item = new ListViewItem(operation);
         item.SubItems.Add($"{htTime} мс");
-        item.SubItems.Add($"{listTime} мс");
-        item.SubItems.Add($"{listTime - htTime:+0;-0} мс");
+        item.SubItems.Add($"{arrayTime} мс");
+        item.SubItems.Add($"{arrayTime - htTime:+0;-0} мс");
         listView1.Items.Add(item);
     }
 
@@ -118,7 +123,6 @@ public partial class Form1 : Form
         }
     }
 
-    
     /// <summary>
     /// Обработка нажатия кнопки редактирования
     /// </summary>
@@ -130,16 +134,15 @@ public partial class Form1 : Form
         {
             if (_editingHotel == null) return;
 
-            string oldName = _editingHotel.Name;  // Старый ключ
+            string oldName = _editingHotel.Name;
 
-            if (!TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms, 
+            if (!TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms,
                     out decimal pricePerDay, out string address, out double rating, out bool hasFreeWiFi))
                 return;
 
-            // Если имя не меняется — просто обновляем объект по старому ключу
             if (name == oldName)
             {
-                _editingHotel.Name = name;  // Сеттер есть!
+                _editingHotel.Name = name;
                 _editingHotel.OccupiedRooms = occupiedRooms;
                 _editingHotel.TotalRooms = totalRooms;
                 _editingHotel.PricePerDay = pricePerDay;
@@ -147,21 +150,19 @@ public partial class Form1 : Form
                 _editingHotel.Rating = rating;
                 _editingHotel.HasFreeWiFi = hasFreeWiFi;
 
-                // Обновляем в коллекции (заменяем объект по ключу)
                 hotels[oldName] = _editingHotel;
-                // Можно добавить событие "Updated" в будущем
             }
             else
             {
-                // Имя поменялось: удаляем старый, создаём новый
-                hotels.Remove(oldName);  // Событие Removed сработает
+                hotels.Remove(oldName);
 
-                Hotel updatedHotel = new Hotel(name, occupiedRooms, totalRooms, pricePerDay, address, rating, hasFreeWiFi);
-                hotels.Add(updatedHotel);  // Событие Added сработает
+                Hotel updatedHotel = new Hotel(name, occupiedRooms, totalRooms, pricePerDay, address, rating,
+                    hasFreeWiFi);
+                hotels.Add(updatedHotel);
             }
 
             ExitEditMode();
-            RenderHotels();  // Авто-обновление уже есть через подписку
+            RenderHotels();
         }
         catch (HotelOverflowException ex)
         {
@@ -172,7 +173,6 @@ public partial class Form1 : Form
             ShowUser32Error(ex.Message);
         }
     }
-
 
     /// <summary>
     /// Обработка нажатия кнопки отмены редактирования
@@ -187,7 +187,7 @@ public partial class Form1 : Form
         }
         catch (Exception ex)
         {
-            ShowUser32Error($"Ошибка отметы действия: {ex.Message}");
+            ShowUser32Error($"Ошибка отмены действия: {ex.Message}");
         }
     }
 
@@ -218,10 +218,9 @@ public partial class Form1 : Form
 
         flowHotels.Controls.Clear();
         if (hotels == null) return;
-    
-        foreach (Hotel hotel in hotels.Values)  // Теперь из вашей Hashtable!
+
+        foreach (Hotel hotel in hotels.Values)
         {
-            
             int btnPadding = 8;
             Panel card = new Panel();
             card.Width = 250;
@@ -229,17 +228,15 @@ public partial class Form1 : Form
             card.BorderStyle = BorderStyle.FixedSingle;
             card.Margin = new Padding(0, 0, 0, 10);
 
-// INFO — МЕНЬШЕ высота, чтобы не лезло на кнопки
             Label info = new Label();
             info.Text = hotel.ToString();
             info.AutoSize = false;
-            info.Size = new Size(card.Width - 20, 120);  // Было 95 → 85px (WiFi влезет!)
+            info.Size = new Size(card.Width - 20, 120);
             info.Location = new Point(8, 8);
-            info.Font = new Font("Segoe UI", 8.5F);  // Шрифт чуть меньше
-            info.TextAlign = ContentAlignment.TopLeft;  // Выравнивание текста
+            info.Font = new Font("Segoe UI", 8.5F);
+            info.TextAlign = ContentAlignment.TopLeft;
             card.Controls.Add(info);
 
-// Кнопка ИЗМЕНИТЬ (справа внизу)
             Button btnEdit = new Button();
             btnEdit.Text = "Изменить";
             btnEdit.TextAlign = ContentAlignment.MiddleCenter;
@@ -251,17 +248,16 @@ public partial class Form1 : Form
             btnEdit.Click += (s, e) => StartEditHotel(hotel);
             card.Controls.Add(btnEdit);
 
-            
-// Кнопка УДАЛЕНИЯ (слева внизу)
             Button btnDelete = new Button();
             btnDelete.Text = "Удалить";
             btnDelete.TextAlign = ContentAlignment.MiddleCenter;
             btnDelete.Size = new Size(80, 28);
-            btnDelete.Location = new Point(8, card.Height - btnDelete.Height - btnPadding);  // 170-28-8=134
+            btnDelete.Location = new Point(8, card.Height - btnDelete.Height - btnPadding);
             btnDelete.BackColor = Color.LightCoral;
             btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Click += (s, e) => {
-                if (MessageBox.Show($"Удалить '{hotel.Name}'?", "Подтверждение", 
+            btnDelete.Click += (s, e) =>
+            {
+                if (MessageBox.Show($"Удалить '{hotel.Name}'?", "Подтверждение",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     hotels.Remove(hotel.Name);
@@ -270,10 +266,8 @@ public partial class Form1 : Form
             card.Controls.Add(btnDelete);
 
             flowHotels.Controls.Add(card);
-
         }
     }
-
 
     /// <summary>
     /// Метод для редактирования гостиницы
@@ -454,11 +448,11 @@ public partial class Form1 : Form
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                ShowUser32Error($"Введите значение для '{fieldName}'."); // user32.dll
+                ShowUser32Error($"Введите значение для '{fieldName}'.");
                 result = 0;
                 return false;
             }
-            
+
             result = checked(int.Parse(text));
 
             if (result < 0)
@@ -473,13 +467,13 @@ public partial class Form1 : Form
         catch (OverflowException)
         {
             var customEx = new HotelOverflowException(fieldName, text);
-            System.Windows.Forms.MessageBox.Show(this, customEx.Message); // System.Windows.Forms!
+            System.Windows.Forms.MessageBox.Show(this, customEx.Message);
             result = 0;
             return false;
         }
         catch (FormatException)
         {
-            ShowUser32Error($"Неверный формат числа в '{fieldName}'."); // user32.dll
+            ShowUser32Error($"Неверный формат числа в '{fieldName}'.");
             result = 0;
             return false;
         }
@@ -499,7 +493,7 @@ public partial class Form1 : Form
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                ShowUser32Error($"Введите значение для '{fieldName}'."); // user32.dll
+                ShowUser32Error($"Введите значение для '{fieldName}'.");
                 result = 0;
                 return false;
             }
@@ -508,7 +502,7 @@ public partial class Form1 : Form
 
             if (result < 0)
             {
-                ShowUser32Warning($"Для '{fieldName}' введите число ≥ 0."); // user32.dll
+                ShowUser32Warning($"Для '{fieldName}' введите число ≥ 0.");
                 result = 0;
                 return false;
             }
@@ -518,13 +512,13 @@ public partial class Form1 : Form
         catch (OverflowException)
         {
             var customEx = new HotelOverflowException(fieldName, text);
-            System.Windows.Forms.MessageBox.Show(this, customEx.Message); // System.Windows.Forms!
+            System.Windows.Forms.MessageBox.Show(this, customEx.Message);
             result = 0;
             return false;
         }
         catch (FormatException)
         {
-            ShowUser32Error($"Неверный формат числа в '{fieldName}'."); // user32.dll
+            ShowUser32Error($"Неверный формат числа в '{fieldName}'.");
             result = 0;
             return false;
         }
@@ -544,7 +538,7 @@ public partial class Form1 : Form
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                ShowUser32Error($"Введите значение для '{fieldName}'."); // user32.dll
+                ShowUser32Error($"Введите значение для '{fieldName}'.");
                 result = 0;
                 return false;
             }
@@ -556,59 +550,56 @@ public partial class Form1 : Form
         catch (OverflowException)
         {
             var customEx = new HotelOverflowException(fieldName, text);
-            System.Windows.Forms.MessageBox.Show(this, customEx.Message); // System.Windows.Forms!
+            System.Windows.Forms.MessageBox.Show(this, customEx.Message);
             result = 0;
             return false;
         }
         catch (FormatException)
         {
-            ShowUser32Error($"Неверный формат числа в '{fieldName}'."); // user32.dll
+            ShowUser32Error($"Неверный формат числа в '{fieldName}'.");
             result = 0;
             return false;
         }
     }
 
+    /// <summary>
+    /// Обработка нажатия кнопки теста
+    /// </summary>
+    /// <param name="sender"> Объект, вызвавший событие </param>
+    /// <param name="e"> Информация о событии </param>
     private void buttonTest_Click(object sender, EventArgs e)
     {
-        try
-        {
-            // Очистка и настройка колонок
-            listView1.Items.Clear();
-            listView1.View = View.Details;
-            listView1.Columns.Clear();
-            listView1.Columns.Add("Операция", 150);
-            listView1.Columns.Add("Hashtable", 120);
-            listView1.Columns.Add("Array", 100);
-            listView1.Columns.Add("Разница", 100);
+        listView1.Items.Clear();
+        listView1.View = View.Details;
+        listView1.Columns.Clear();
+        listView1.Columns.Add("Операция", 150);
+        listView1.Columns.Add("Hashtable", 120);
+        listView1.Columns.Add("Array", 100);
+        listView1.Columns.Add("Разница", 100);
 
-            // ✅ РЕАЛЬНЫЕ ТЕСТЫ (5-10 сек)
-            var hotels = PerformanceTest.GenerateUniqueHotels(100000);
-            var names = hotels.Select(h => h.Name).ToList();
+        var hotels = PerformanceTest.GenerateUniqueHotels(100000);
+        var hotelsArray = new Hotel[100000];
 
-            // 1. ВСТАВКА
-            var htInsert = new HotelsHashtableCollection();
-            var listInsert = new List<Hotel>();
-            long htInsertTime = PerformanceTest.MeasureInsert(htInsert, hotels);
-            long listInsertTime = PerformanceTest.MeasureInsert(listInsert, hotels);
-            AddTestRow("Вставка 100k", htInsertTime, listInsertTime);
+        // Вставка
+        var htInsert = new HotelsHashtableCollection();
+        long htInsertTime = PerformanceTest.MeasureInsert(htInsert, hotels);
+        long arrayInsertTime = PerformanceTest.MeasureArrayInsert(hotelsArray, hotels);
+        AddTestRow("Вставка 100k", htInsertTime, arrayInsertTime);
 
-            // 2. ПОСЛЕДОВАТЕЛЬНАЯ ВЫБОРКА
-            var htSeq = new HotelsHashtableCollection();
-            var listSeq = new List<Hotel>();
-            PerformanceTest.InsertUniqueHotels(htSeq, hotels);
-            PerformanceTest.InsertUniqueHotels(listSeq, hotels);
-            long htSeqTime = PerformanceTest.MeasureSeqGet(htSeq);
-            long listSeqTime = PerformanceTest.MeasureSeqListGet(listSeq);
-            AddTestRow("Посл. выборка", htSeqTime, listSeqTime);
+        // Последовательная выборка
+        var htSeq = new HotelsHashtableCollection();
+        PerformanceTest.InsertUniqueHotels(htSeq, hotels);
+        Array.Copy(hotels.ToArray(), hotelsArray, 100000);
+        long htSeqTime = PerformanceTest.MeasureSeqGet(htSeq);
+        long arraySeqTime = PerformanceTest.MeasureArraySeqGet(hotelsArray);
+        AddTestRow("Посл. выборка", htSeqTime, arraySeqTime);
 
-            // 3. СЛУЧАЙНАЯ ВЫБОРКА
-            long htRandTime = PerformanceTest.MeasureRandGet(htSeq, names);
-            long listRandTime = PerformanceTest.MeasureRandListGet(listSeq, names);
-            AddTestRow("Случай. выборка", htRandTime, listRandTime);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка теста: {ex.Message}\n\nПроверьте:\n1. Добавлен Clear() в HotelsHashtableCollection\n2. PerformanceTest.cs скомпилирован", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+        // Случайная выборка
+        var names = hotels.Select(h => h.Name).ToList();
+        var htRand = new HotelsHashtableCollection();
+        PerformanceTest.InsertUniqueHotels(htRand, hotels);
+        long htRandTime = PerformanceTest.MeasureRandGet(htRand, names);
+        long arrayRandTime = PerformanceTest.MeasureArrayRandGet(hotelsArray);
+        AddTestRow("Случай. доступ", htRandTime, arrayRandTime);
     }
 }
