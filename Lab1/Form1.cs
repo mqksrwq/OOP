@@ -12,7 +12,8 @@ public partial class Form1 : Form
 
     // Импорт MessageBoxW из библиотеки user32.dll, строки передаются как Unicode
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    private static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
+    private static extern int MessageBoxW(IntPtr hWnd, string text, string caption,
+        uint type);
 
     private const uint MB_OK = 0x00000000; // кнопка ОК
     private const uint MB_ICONERROR = 0x00000010; // красная иконка ошибки
@@ -47,9 +48,8 @@ public partial class Form1 : Form
         MessageBox.Show(this,
             "Лабораторная №1 - Вариант 9 (Гостиница)\n\nГруппа 24ВП1 - Студенты: Бояркин Максим и Мишин Артём",
             "Привет!!");
-        
+
         MinimumSize = new Size(700, 400);
-        // tableLayoutPanel1.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
     }
 
     /// <summary>
@@ -61,12 +61,14 @@ public partial class Form1 : Form
     {
         try
         {
-            if (!TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms,
+            if (!TryGetHotelFromForm(out string name, out int occupiedRooms,
+                    out int totalRooms,
                     out decimal pricePerDay, out string address, out double rating,
                     out bool hasFreeWiFi))
                 return;
 
-            _hotel = new Hotel(name, occupiedRooms, totalRooms, pricePerDay, address, rating, hasFreeWiFi);
+            _hotel = new Hotel(name, occupiedRooms, totalRooms, pricePerDay, address,
+                rating, hasFreeWiFi);
             RenderHotels();
             ClearFormFields();
         }
@@ -108,7 +110,8 @@ public partial class Form1 : Form
         {
             if (_editingHotel == null) return;
 
-            if (!TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms,
+            if (!TryGetHotelFromForm(out string name, out int occupiedRooms,
+                    out int totalRooms,
                     out decimal pricePerDay, out string address, out double rating,
                     out bool hasFreeWiFi))
                 return;
@@ -272,7 +275,8 @@ public partial class Form1 : Form
     /// <param name="rating"> Рейтинг </param>
     /// <param name="hasFreeWiFi"> Наличие бесплатного WiFi </param>
     /// <returns> Успешная валидация или нет </returns>
-    private bool TryGetHotelFromForm(out string name, out int occupiedRooms, out int totalRooms,
+    private bool TryGetHotelFromForm(out string name, out int occupiedRooms,
+        out int totalRooms,
         out decimal pricePerDay, out string address, out double rating,
         out bool hasFreeWiFi)
     {
@@ -291,7 +295,8 @@ public partial class Form1 : Form
                 return false;
             }
 
-            if (!SafeParseInt(textBoxOccupiedRooms.Text.Trim(), "Заселено мест", out occupiedRooms))
+            if (!SafeParseInt(textBoxOccupiedRooms.Text.Trim(), "Заселено мест",
+                    out occupiedRooms))
             {
                 textBoxOccupiedRooms.Select();
                 totalRooms = 0;
@@ -302,7 +307,8 @@ public partial class Form1 : Form
                 return false;
             }
 
-            if (!SafeParseInt(textBoxTotalRooms.Text.Trim(), "Общее число мест", out totalRooms))
+            if (!SafeParseInt(textBoxTotalRooms.Text.Trim(), "Общее число мест",
+                    out totalRooms))
             {
                 textBoxTotalRooms.Select();
                 pricePerDay = 0;
@@ -314,7 +320,8 @@ public partial class Form1 : Form
 
             if (occupiedRooms > totalRooms)
             {
-                ShowUser32Error("'Заселено мест' не может быть больше, чем 'Общее число мест'.");
+                ShowUser32Error(
+                    "'Заселено мест' не может быть больше, чем 'Общее число мест'.");
                 textBoxOccupiedRooms.Select();
                 pricePerDay = 0;
                 address = "";
@@ -323,7 +330,8 @@ public partial class Form1 : Form
                 return false;
             }
 
-            if (!SafeParseDecimal(textBoxPricePerDay.Text.Trim(), "Оплата за день", out pricePerDay))
+            if (!SafeParseDecimal(textBoxPricePerDay.Text.Trim(), "Оплата за день",
+                    out pricePerDay))
             {
                 textBoxPricePerDay.Select();
                 address = "";
@@ -351,7 +359,8 @@ public partial class Form1 : Form
 
             if (rating < 0 || rating > 10)
             {
-                ShowUser32Error("Неверное значение для 'Рейтинг'. Введите число от 0 до 10.");
+                ShowUser32Error(
+                    "Неверное значение для 'Рейтинг'. Введите число от 0 до 10.");
                 textBoxRating.Select();
                 hasFreeWiFi = false;
                 return false;
@@ -387,11 +396,12 @@ public partial class Form1 : Form
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                ShowUser32Error($"Введите значение для '{fieldName}'."); // user32.dll
+                ShowUser32Error(
+                    $"Введите значение для '{fieldName}'."); // user32.dll
                 result = 0;
                 return false;
             }
-            
+
             result = checked(int.Parse(text));
 
             if (result < 0)
@@ -406,7 +416,8 @@ public partial class Form1 : Form
         catch (OverflowException)
         {
             var customEx = new HotelOverflowException(fieldName, text);
-            System.Windows.Forms.MessageBox.Show(this, customEx.Message); // System.Windows.Forms!
+            System.Windows.Forms.MessageBox.Show(this,
+                customEx.Message); // System.Windows.Forms!
             result = 0;
             return false;
         }
@@ -432,7 +443,8 @@ public partial class Form1 : Form
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                ShowUser32Error($"Введите значение для '{fieldName}'."); // user32.dll
+                ShowUser32Error(
+                    $"Введите значение для '{fieldName}'."); // user32.dll
                 result = 0;
                 return false;
             }
@@ -441,7 +453,8 @@ public partial class Form1 : Form
 
             if (result < 0)
             {
-                ShowUser32Warning($"Для '{fieldName}' введите число ≥ 0."); // user32.dll
+                ShowUser32Warning(
+                    $"Для '{fieldName}' введите число ≥ 0."); // user32.dll
                 result = 0;
                 return false;
             }
@@ -451,7 +464,8 @@ public partial class Form1 : Form
         catch (OverflowException)
         {
             var customEx = new HotelOverflowException(fieldName, text);
-            System.Windows.Forms.MessageBox.Show(this, customEx.Message); // System.Windows.Forms!
+            System.Windows.Forms.MessageBox.Show(this,
+                customEx.Message); // System.Windows.Forms!
             result = 0;
             return false;
         }
@@ -477,7 +491,8 @@ public partial class Form1 : Form
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                ShowUser32Error($"Введите значение для '{fieldName}'."); // user32.dll
+                ShowUser32Error(
+                    $"Введите значение для '{fieldName}'."); // user32.dll
                 result = 0;
                 return false;
             }
@@ -489,7 +504,8 @@ public partial class Form1 : Form
         catch (OverflowException)
         {
             var customEx = new HotelOverflowException(fieldName, text);
-            System.Windows.Forms.MessageBox.Show(this, customEx.Message); // System.Windows.Forms!
+            System.Windows.Forms.MessageBox.Show(this,
+                customEx.Message); // System.Windows.Forms!
             result = 0;
             return false;
         }

@@ -7,7 +7,6 @@ namespace Lab2;
 /// </summary>
 public partial class FormHotel : Form
 {
-    private Hotel _hotel;
     private Hotel? _editingHotel = null;
 
     private HotelsHashtableCollection hotels;
@@ -17,7 +16,7 @@ public partial class FormHotel : Form
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     private static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
 
-    private const uint MB_OK = 0x00000000; // кнопка ОК
+    private const uint MB_OK = 0x00000000; // А ОК
     private const uint MB_ICONERROR = 0x00000010; // красная иконка ошибки
     private const uint MB_ICONWARNING = 0x00000030; // желтая иконка предупреждения
 
@@ -59,7 +58,7 @@ public partial class FormHotel : Form
             "Привет!!");
 
         MinimumSize = new Size(700, 400);
-        RenderHotels();
+        // RenderHotels();
     }
 
     /// <summary>

@@ -21,7 +21,8 @@ namespace Lab2
             for (int i = 0; i < count; i++)
             {
                 string name = $"Hotel{i:D6}";
-                result[i] = new Hotel(name, rand.Next(0, 101), rand.Next(10, 201),
+                result[i] = new Hotel(name, rand.Next(0, 101),
+                    rand.Next(10, 201),
                     1000m + rand.Next(0, 5000), $"Адрес {i}",
                     1.0 + rand.NextDouble() * 4, rand.NextDouble() > 0.5);
             }
@@ -32,7 +33,8 @@ namespace Lab2
         /// <summary>
         /// Замер вставки в HashTable
         /// </summary>
-        public static long MeasureInsert(HotelsHashtableCollection ht, Hotel[] hotels)
+        public static long MeasureInsert(HotelsHashtableCollection ht,
+            Hotel[] hotels)
         {
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < hotels.Length; i++)
@@ -45,7 +47,8 @@ namespace Lab2
         /// <summary>
         /// Вставка уникальных гостиниц в HashTable
         /// </summary>
-        public static void InsertUniqueHotels(HotelsHashtableCollection ht, Hotel[] hotels)
+        public static void InsertUniqueHotels(HotelsHashtableCollection ht,
+            Hotel[] hotels)
         {
             for (int i = 0; i < hotels.Length; i++)
                 ht.Add(hotels[i]);
@@ -73,7 +76,8 @@ namespace Lab2
         /// <summary>
         /// Замер случайной выборки из HashTable 
         /// </summary>
-        public static long MeasureRandGet(HotelsHashtableCollection ht, string[] names)
+        public static long MeasureRandGet(HotelsHashtableCollection ht,
+            string[] names)
         {
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 100000; i++)

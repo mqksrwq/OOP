@@ -20,8 +20,7 @@ public class Hotel
     private HotelsHashtableCollection hotels;
     private HotelsCollectionListener listener;
     private Hotel? editingHotel = null;
-
-
+    
     /// <summary>
     /// Конструктор без параметров
     /// </summary>

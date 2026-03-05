@@ -1,5 +1,7 @@
+namespace Lab1;
+
 /// <summary>
-/// Кастомное исключение для ошибок переполнения гостиницы
+/// Исключение для ошибок переполнения гостиницы
 /// </summary>
 public class HotelOverflowException : OverflowException
 {
@@ -12,8 +14,8 @@ public class HotelOverflowException : OverflowException
     /// <param name="fieldName"> Название поля </param>
     /// <param name="value"> Значение поля </param>
     public HotelOverflowException(string fieldName, string value)
-        // вызов конструктора родителя
-        : base($"Переполнение для поля '{fieldName}': значение '{value}' слишком велико")
+        : base(
+            $"Переполнение для поля '{fieldName}': значение '{value}' слишком велико")
     {
         FieldName = fieldName;
         Value = value;
