@@ -13,12 +13,14 @@ public class Hotel
     public string Address { get; set; }
     public double Rating { get; set; }
     public bool HasFreeWiFi { get; set; }
-    
+
     // Счетчик гостиниц
     public static int InstanceCount { get; private set; }
-    private Hotel? editingHotel = null; 
 
-
+    private HotelsHashtableCollection hotels;
+    private HotelsCollectionListener listener;
+    private Hotel? editingHotel = null;
+    
     /// <summary>
     /// Конструктор без параметров
     /// </summary>
@@ -31,8 +33,9 @@ public class Hotel
         Address = "Адрес не задан";
         Rating = 3.5;
         HasFreeWiFi = true;
-        
+
         InstanceCount++;
+        hotels.Add(this);
     }
 
     /// <summary>
@@ -64,7 +67,8 @@ public class Hotel
     /// <param name="address"> Адрес </param>
     /// <param name="rating"> Рейтинг </param>
     /// <param name="hasFreeWiFi"> Наличие бесплатного WiFi </param>
-    public Hotel(string name, int occupiedRooms, int totalRooms, decimal pricePerDay, string address, double rating, bool hasFreeWiFi)
+    public Hotel(string name, int occupiedRooms, int totalRooms, decimal pricePerDay, string address, double rating,
+        bool hasFreeWiFi)
     {
         Name = name;
         OccupiedRooms = occupiedRooms;
@@ -73,10 +77,8 @@ public class Hotel
         Address = address;
         Rating = rating;
         HasFreeWiFi = hasFreeWiFi;
-        
-
     }
-    
+
     /// <summary>
     /// Метод, переопределяющий toString() для всего объекта
     /// </summary>
@@ -89,7 +91,7 @@ public class Hotel
                $"Адрес: {Address}, Рейтинг: {Rating}\n" +
                $"Wi-Fi: {(HasFreeWiFi ? "Да" : "Нет")}\n";
     }
-    
+
     /// <summary>
     /// Метод для вывода значения определенного поля
     /// </summary>
@@ -109,7 +111,7 @@ public class Hotel
             _ => "Поле не найдено"
         };
     }
-    
+
     /// <summary>
     /// Метод для вывода поля OccupiedRooms в шестнадцатеричном формате
     /// </summary>
@@ -118,13 +120,13 @@ public class Hotel
     {
         return OccupiedRooms.ToString("X");
     }
-    
+
     /// <summary>
     /// Метод для изменения полей
     /// </summary>
     /// <param name="fieldName"> Название поля </param>
     /// <param name="newValue"> Новое значение поля </param>
-    /// <returns> Статус о изменении </returns>
+    /// <returns> Статус об изменении </returns>
     public bool SetFieldValue(string fieldName, string newValue)
     {
         try
@@ -179,6 +181,7 @@ public class Hotel
                         else
                             return false;
                     }
+
                     break;
 
                 default:

@@ -20,8 +20,6 @@ namespace Lab2
         // Событие изменений
         public event HotelsChangedHandler? Changed;
 
-        // public int Count => _items.Count;
-
         /// <summary>
         /// Добавление гостиницы в коллекцию
         /// </summary>
@@ -47,16 +45,15 @@ namespace Lab2
         /// </summary>
         /// <param name="name"> Имя гостиницы </param>
         /// <returns></returns>
-        public bool Remove(string name)
+        public void Remove(string name)
         {
-            if (!_items.ContainsKey(name)) return false;
+            if (!_items.ContainsKey(name)) return;
 
             var hotel = (Hotel)_items[name]!;
             _items.Remove(name);
             Changed?.Invoke(this,
                 new HotelsChangedEventArgs("Removed", name, hotel,
                     $"Удалён отель: {name}"));
-            return true;
         }
 
         /// <summary>

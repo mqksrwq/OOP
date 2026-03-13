@@ -256,9 +256,10 @@ public partial class FormHotel : Form
             Button btnDelete = new Button();
             btnDelete.Text = "Удалить";
             btnDelete.TextAlign = ContentAlignment.MiddleCenter;
-            btnDelete.Size = new Size(80, 28);
+            btnDelete.Size = new Size(100, 28);
             btnDelete.Location = new Point(8, card.Height - btnDelete.Height - btnPadding);
             btnDelete.BackColor = Color.LightCoral;
+            btnDelete.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.Click += (s, e) =>
             {

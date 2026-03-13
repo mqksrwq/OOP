@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Lab3;
 
 static class Program
@@ -8,7 +10,11 @@ static class Program
     [STAThread]
     static void Main()
     {
+        // Установка кодировки в консоли для событий
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
+
         ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
+        Application.Run(new FormHotel());
     }
 }

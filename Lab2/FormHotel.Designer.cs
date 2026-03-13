@@ -85,10 +85,10 @@ partial class FormHotel
         // 
         // textBoxName
         // 
-        textBoxName.Location = new System.Drawing.Point(166, 30);
+        textBoxName.Location = new System.Drawing.Point(180, 30);
         textBoxName.MaxLength = 15;
         textBoxName.Name = "textBoxName";
-        textBoxName.Size = new System.Drawing.Size(200, 27);
+        textBoxName.Size = new System.Drawing.Size(186, 27);
         textBoxName.TabIndex = 1;
         // 
         // labelOccupiedRooms
@@ -102,10 +102,10 @@ partial class FormHotel
         // 
         // textBoxOccupiedRooms
         // 
-        textBoxOccupiedRooms.Location = new System.Drawing.Point(166, 133);
+        textBoxOccupiedRooms.Location = new System.Drawing.Point(180, 137);
         textBoxOccupiedRooms.MaxLength = 15;
         textBoxOccupiedRooms.Name = "textBoxOccupiedRooms";
-        textBoxOccupiedRooms.Size = new System.Drawing.Size(200, 27);
+        textBoxOccupiedRooms.Size = new System.Drawing.Size(186, 27);
         textBoxOccupiedRooms.TabIndex = 4;
         // 
         // labelTotalRooms
@@ -119,16 +119,16 @@ partial class FormHotel
         // 
         // textBoxTotalRooms
         // 
-        textBoxTotalRooms.Location = new System.Drawing.Point(166, 104);
+        textBoxTotalRooms.Location = new System.Drawing.Point(180, 104);
         textBoxTotalRooms.MaxLength = 15;
         textBoxTotalRooms.Name = "textBoxTotalRooms";
-        textBoxTotalRooms.Size = new System.Drawing.Size(200, 27);
+        textBoxTotalRooms.Size = new System.Drawing.Size(186, 27);
         textBoxTotalRooms.TabIndex = 3;
         // 
         // labelPricePerDay
         // 
         labelPricePerDay.AutoSize = true;
-        labelPricePerDay.Location = new System.Drawing.Point(15, 211);
+        labelPricePerDay.Location = new System.Drawing.Point(17, 209);
         labelPricePerDay.Name = "labelPricePerDay";
         labelPricePerDay.Size = new System.Drawing.Size(157, 20);
         labelPricePerDay.TabIndex = 6;
@@ -136,10 +136,10 @@ partial class FormHotel
         // 
         // textBoxPricePerDay
         // 
-        textBoxPricePerDay.Location = new System.Drawing.Point(166, 209);
+        textBoxPricePerDay.Location = new System.Drawing.Point(180, 213);
         textBoxPricePerDay.MaxLength = 15;
         textBoxPricePerDay.Name = "textBoxPricePerDay";
-        textBoxPricePerDay.Size = new System.Drawing.Size(200, 27);
+        textBoxPricePerDay.Size = new System.Drawing.Size(186, 27);
         textBoxPricePerDay.TabIndex = 6;
         // 
         // labelAddress
@@ -153,10 +153,10 @@ partial class FormHotel
         // 
         // textBoxAddress
         // 
-        textBoxAddress.Location = new System.Drawing.Point(166, 56);
+        textBoxAddress.Location = new System.Drawing.Point(180, 63);
         textBoxAddress.MaxLength = 15;
         textBoxAddress.Name = "textBoxAddress";
-        textBoxAddress.Size = new System.Drawing.Size(200, 27);
+        textBoxAddress.Size = new System.Drawing.Size(186, 27);
         textBoxAddress.TabIndex = 2;
         // 
         // labelRating
@@ -170,10 +170,10 @@ partial class FormHotel
         // 
         // textBoxRating
         // 
-        textBoxRating.Location = new System.Drawing.Point(166, 179);
+        textBoxRating.Location = new System.Drawing.Point(180, 179);
         textBoxRating.MaxLength = 15;
         textBoxRating.Name = "textBoxRating";
-        textBoxRating.Size = new System.Drawing.Size(200, 27);
+        textBoxRating.Size = new System.Drawing.Size(186, 27);
         textBoxRating.TabIndex = 5;
         // 
         // labelHasFreeWiFi
@@ -187,7 +187,7 @@ partial class FormHotel
         // 
         // checkBoxHasFreeWiFi
         // 
-        checkBoxHasFreeWiFi.Location = new System.Drawing.Point(166, 242);
+        checkBoxHasFreeWiFi.Location = new System.Drawing.Point(156, 245);
         checkBoxHasFreeWiFi.Name = "checkBoxHasFreeWiFi";
         checkBoxHasFreeWiFi.Size = new System.Drawing.Size(20, 24);
         checkBoxHasFreeWiFi.TabIndex = 7;
@@ -226,9 +226,9 @@ partial class FormHotel
         // 
         flowHotels.AutoScroll = true;
         flowHotels.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-        flowHotels.Location = new System.Drawing.Point(372, 14);
+        flowHotels.Location = new System.Drawing.Point(375, 30);
         flowHotels.Name = "flowHotels";
-        flowHotels.Size = new System.Drawing.Size(281, 361);
+        flowHotels.Size = new System.Drawing.Size(281, 333);
         flowHotels.TabIndex = 17;
         flowHotels.WrapContents = false;
         // 
@@ -290,9 +290,9 @@ partial class FormHotel
         // 
         // buttonTest
         // 
-        buttonTest.Location = new System.Drawing.Point(234, 246);
+        buttonTest.Location = new System.Drawing.Point(227, 246);
         buttonTest.Name = "buttonTest";
-        buttonTest.Size = new System.Drawing.Size(113, 31);
+        buttonTest.Size = new System.Drawing.Size(120, 31);
         buttonTest.TabIndex = 18;
         buttonTest.Text = "Тест";
         buttonTest.UseVisualStyleBackColor = true;
@@ -310,7 +310,6 @@ partial class FormHotel
         // 
         ClientSize = new System.Drawing.Size(913, 649);
         Controls.Add(tableLayoutPanel1);
-        Name = "FormHotel";
         Text = "Создание гостиницы";
         tableLayoutPanel1.ResumeLayout(false);
         panel1.ResumeLayout(false);
