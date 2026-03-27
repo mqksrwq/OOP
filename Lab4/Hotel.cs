@@ -1,9 +1,12 @@
-﻿namespace Lab4;
+using System;
+using System.Collections.Generic;
+
+namespace Lab4;
 
 /// <summary>
-/// Класс гостиницы
+/// Класс гостиницы (лист в паттерне Composite)
 /// </summary>
-public class Hotel
+public class Hotel : IHotelComponent
 {
     // Свойства класса
     public string Name { get; set; }
@@ -16,11 +19,8 @@ public class Hotel
 
     // Счетчик гостиниц
     public static int InstanceCount { get; private set; }
-
-    private HotelsHashtableCollection hotels;
-    private HotelsCollectionListener listener;
     private Hotel? editingHotel = null;
-    
+
     /// <summary>
     /// Конструктор без параметров
     /// </summary>
@@ -33,9 +33,7 @@ public class Hotel
         Address = "Адрес не задан";
         Rating = 3.5;
         HasFreeWiFi = true;
-
         InstanceCount++;
-        hotels.Add(this);
     }
 
     /// <summary>
@@ -90,6 +88,25 @@ public class Hotel
                $"Цена за день: {PricePerDay} руб\n" +
                $"Адрес: {Address}, Рейтинг: {Rating}\n" +
                $"Wi-Fi: {(HasFreeWiFi ? "Да" : "Нет")}\n";
+    }
+
+    public string Describe(int indent = 0)
+    {
+        var pad = new string(' ', Math.Max(0, indent));
+        return pad + ToString();
+    }
+
+    public void Add(IHotelComponent component) =>
+        throw new NotSupportedException("Нельзя добавить компонент к листу Hotel.");
+
+    public bool Remove(string name) =>
+        throw new NotSupportedException("Нельзя удалять дочерние элементы у листа Hotel.");
+
+    public IHotelComponent? Find(string name) => Name == name ? this : null;
+
+    public IEnumerable<IHotelComponent> Children
+    {
+        get { yield break; }
     }
 
     /// <summary>

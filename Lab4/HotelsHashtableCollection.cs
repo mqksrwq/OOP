@@ -1,5 +1,3 @@
-﻿// HotelsHashtableCollection.cs
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,35 +9,40 @@ namespace Lab4
         HotelsChangedEventArgs e);
 
     /// <summary>
-    /// Класс коллекции гостиниц типа HashTable
+    /// Композит: коллекция гостиниц, совместимая с IHotelComponent.
     /// </summary>
-    public class HotelsHashtableCollection
+    public class HotelsHashtableCollection : IHotelComponent
     {
         private readonly Hashtable _items = new Hashtable();
+
+        public string Name { get; }
 
         // Событие изменений
         public event HotelsChangedHandler? Changed;
 
-        // public int Count => _items.Count;
+        public HotelsHashtableCollection(string name = "HotelsCollection")
+        {
+            Name = name;
+        }
 
         /// <summary>
-        /// Добавление гостиницы в коллекцию
+        /// Добавление гостиницы/компонента в коллекцию
         /// </summary>
-        /// <param name="hotel"> Гостиница </param>
+        /// <param name="component"> Компонент </param>
         /// <exception cref="ArgumentException"> Поле не прошло валидацию </exception>
         /// <exception cref="InvalidOperationException"> Ошибка операции </exception>
-        public void Add(Hotel hotel)
+        public void Add(IHotelComponent component)
         {
-            if (_items.ContainsKey(hotel.Name))
+            if (_items.ContainsKey(component.Name))
             {
                 throw new InvalidOperationException(
-                    $"Отель с ключом '{hotel.Name}' уже существует");
+                    $"Элемент с ключом '{component.Name}' уже существует");
             }
 
-            _items.Add(hotel.Name, hotel);
+            _items.Add(component.Name, component);
             Changed?.Invoke(this,
-                new HotelsChangedEventArgs("Added", hotel.Name, hotel,
-                    $"Добавлен отель: {hotel.Name}"));
+                new HotelsChangedEventArgs("Added", component.Name, component,
+                    $"Добавлен элемент: {component.Name}"));
         }
 
         /// <summary>
@@ -51,11 +54,11 @@ namespace Lab4
         {
             if (!_items.ContainsKey(name)) return false;
 
-            var hotel = (Hotel)_items[name]!;
+            var component = (IHotelComponent)_items[name]!;
             _items.Remove(name);
             Changed?.Invoke(this,
-                new HotelsChangedEventArgs("Removed", name, hotel,
-                    $"Удалён отель: {name}"));
+                new HotelsChangedEventArgs("Removed", name, component,
+                    $"Удалён элемент: {name}"));
             return true;
         }
 
@@ -71,9 +74,9 @@ namespace Lab4
         }
 
         // Типизированный доступ
-        public Hotel? this[string key]
+        public IHotelComponent? this[string key]
         {
-            get => (Hotel?)_items[key];
+            get => (IHotelComponent?)_items[key];
             set
             {
                 if (value == null)
@@ -89,14 +92,43 @@ namespace Lab4
             }
         }
 
-        // Вывод в методе RenderHotels
-        public IEnumerable<Hotel> Values
+        public IEnumerable<IHotelComponent> Children
         {
             get
             {
-                foreach (Hotel h in _items.Values)
+                foreach (IHotelComponent h in _items.Values)
                     yield return h;
             }
+        }
+
+        /// <summary>
+        /// Совместимость со старым API: перечисление значений.
+        /// </summary>
+        public IEnumerable<IHotelComponent> Values => Children;
+
+        public string Describe(int indent = 0)
+        {
+            var pad = new string(' ', Math.Max(0, indent));
+            var lines = new List<string> { $"{pad}Коллекция \"{Name}\" (кол-во: {_items.Count})" };
+            foreach (var child in Children)
+            {
+                lines.Add(child.Describe(indent + 2));
+            }
+            return string.Join(Environment.NewLine, lines);
+        }
+
+        public IHotelComponent? Find(string name)
+        {
+            if (Name == name) return this;
+
+            foreach (IHotelComponent child in Children)
+            {
+                if (child.Name == name) return child;
+                var nested = child.Find(name);
+                if (nested != null) return nested;
+            }
+
+            return null;
         }
     }
 }

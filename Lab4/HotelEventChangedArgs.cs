@@ -13,7 +13,7 @@ namespace Lab4
         // Доступ по ключу
         public string Key { get; }
 
-        public Hotel? Hotel { get; }
+        public IHotelComponent? Component { get; }
         public string Message { get; }
 
         /// <summary>
@@ -21,13 +21,13 @@ namespace Lab4
         /// </summary>
         /// <param name="action"> Действие </param>
         /// <param name="key"> Поле </param>
-        /// <param name="hotel"> Гостиница </param>
+        /// <param name="component"> Компонент (отель или коллекция) </param>
         /// <param name="message"> Сообщение </param>
-        public HotelsChangedEventArgs(string action, string key, Hotel? hotel, string message)
+        public HotelsChangedEventArgs(string action, string key, IHotelComponent? component, string message)
         {
             Action = action;
             Key = key;
-            Hotel = hotel;
+            Component = component;
             Message = message;
         }
     }
