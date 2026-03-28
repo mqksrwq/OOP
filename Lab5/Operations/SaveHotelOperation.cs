@@ -41,7 +41,7 @@ public sealed class SaveHotelOperation : UiOperationTemplate
 
     protected override void ExecuteCore()
     {
-        _currentGroup!.Remove(_currentHotel!.Name);
+        _currentGroup?.Remove(_currentHotel!.Name);
         _targetGroup.Add(_newHotel);
     }
 
