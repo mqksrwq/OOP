@@ -16,11 +16,7 @@ public class Hotel : IHotelComponent
     public string Address { get; set; }
     public double Rating { get; set; }
     public bool HasFreeWiFi { get; set; }
-
-    // Счетчик гостиниц
-    public static int InstanceCount { get; private set; }
-    private Hotel? editingHotel = null;
-
+    
     /// <summary>
     /// Конструктор без параметров
     /// </summary>
@@ -33,26 +29,6 @@ public class Hotel : IHotelComponent
         Address = "Адрес не задан";
         Rating = 3.5;
         HasFreeWiFi = true;
-        InstanceCount++;
-    }
-
-    /// <summary>
-    /// Конструктор с одним параметром
-    /// </summary>
-    /// <param name="name"> Название гостиницы </param>
-    public Hotel(string name) : this()
-    {
-        Name = name;
-    }
-
-    /// <summary>
-    /// Конструктор с двумя параметрами
-    /// </summary>
-    /// <param name="name"> Название гостиницы </param>
-    /// <param name="totalRooms"> Общее количество мест </param>
-    public Hotel(string name, int totalRooms) : this(name)
-    {
-        TotalRooms = totalRooms;
     }
 
     /// <summary>
@@ -90,126 +66,57 @@ public class Hotel : IHotelComponent
                $"Wi-Fi: {(HasFreeWiFi ? "Да" : "Нет")}\n";
     }
 
+    /// <summary>
+    /// Формирует строковое представление объекта с заданным отступом.
+    /// Используется в паттерне "Компоновщик" для визуализации иерархии дерева.
+    /// </summary>
+    /// <param name="indent">Количество пробелов для отступа слева (уровень вложенности).</param>
+    /// <returns>Строка, содержащая данные о гостинице, сдвинутая вправо на значение indent.</returns>
     public string Describe(int indent = 0)
     {
         var pad = new string(' ', Math.Max(0, indent));
         return pad + ToString();
     }
 
+    /// <summary>
+    /// Добавление компонента. 
+    /// Для класса Hotel (листа) операция не поддерживается, так как отель не может содержать другие компоненты.
+    /// </summary>
+    /// <param name="component">Компонент для добавления.</param>
+    /// <exception cref="NotSupportedException">Всегда выбрасывается, так как Hotel — конечный узел.</exception>
     public void Add(IHotelComponent component) =>
         throw new NotSupportedException("Нельзя добавить компонент к листу Hotel.");
 
+    /// <summary>
+    /// Удаление компонента по имени.
+    /// Для класса Hotel (листа) операция не поддерживается.
+    /// </summary>
+    /// <param name="name">Название компонента для удаления.</param>
+    /// <returns>Метод не возвращает значение, так как выбрасывает исключение.</returns>
+    /// <exception cref="NotSupportedException">Всегда выбрасывается, так как у отеля нет дочерних элементов.</exception>
     public bool Remove(string name) =>
         throw new NotSupportedException("Нельзя удалять дочерние элементы у листа Hotel.");
 
+    /// <summary>
+    /// Поиск компонента в текущем узле.
+    /// Является "базовым случаем" рекурсии: если имя совпадает, возвращает текущий объект.
+    /// </summary>
+    /// <param name="name">Искомое название отеля.</param>
+    /// <returns>
+    /// Ссылка на текущий объект (IHotelComponent), если имя совпало; иначе — null.
+    /// </returns>
     public IHotelComponent? Find(string name) => Name == name ? this : null;
 
+    /// <summary>
+    /// Возвращает коллекцию дочерних элементов.
+    /// Для узла-листа (Hotel) всегда возвращает пустую последовательность.
+    /// </summary>
+    /// <remarks>
+    /// Использование 'yield break' позволяет избежать создания пустого списка в памяти
+    /// и предотвращает ошибки NullReferenceException у клиента, предоставляя пустой итератор вместо null.
+    /// </remarks>
     public IEnumerable<IHotelComponent> Children
     {
         get { yield break; }
-    }
-
-    /// <summary>
-    /// Метод для вывода значения определенного поля
-    /// </summary>
-    /// <param name="fieldName"> Название поля </param>
-    /// <returns> Значение поля в виде строки </returns>
-    public string GetFieldValue(string fieldName)
-    {
-        return fieldName switch
-        {
-            "Name" => Name,
-            "OccupiedRooms" => OccupiedRooms.ToString(),
-            "TotalRooms" => TotalRooms.ToString(),
-            "PricePerDay" => PricePerDay.ToString(),
-            "Address" => Address,
-            "Rating" => Rating.ToString(),
-            "HasFreeWiFi" => HasFreeWiFi ? "Да" : "Нет",
-            _ => "Поле не найдено"
-        };
-    }
-
-    /// <summary>
-    /// Метод для вывода поля OccupiedRooms в шестнадцатеричном формате
-    /// </summary>
-    /// <returns> Поле в шестнадцатеричном виде </returns>
-    public string GetOccupiedRoomsHex()
-    {
-        return OccupiedRooms.ToString("X");
-    }
-
-    /// <summary>
-    /// Метод для изменения полей
-    /// </summary>
-    /// <param name="fieldName"> Название поля </param>
-    /// <param name="newValue"> Новое значение поля </param>
-    /// <returns> Статус об изменении </returns>
-    public bool SetFieldValue(string fieldName, string newValue)
-    {
-        try
-        {
-            switch (fieldName)
-            {
-                case "Name":
-                    Name = newValue;
-                    break;
-
-                case "OccupiedRooms":
-                    if (int.TryParse(newValue, out int occupied))
-                        OccupiedRooms = occupied;
-                    else
-                        return false;
-                    break;
-
-                case "TotalRooms":
-                    if (int.TryParse(newValue, out int total))
-                        TotalRooms = total;
-                    else
-                        return false;
-                    break;
-
-                case "PricePerDay":
-                    if (decimal.TryParse(newValue, out decimal price))
-                        PricePerDay = price;
-                    else
-                        return false;
-                    break;
-
-                case "Address":
-                    Address = newValue;
-                    break;
-
-                case "Rating":
-                    if (double.TryParse(newValue, out double rating))
-                        Rating = rating;
-                    else
-                        return false;
-                    break;
-
-                case "HasFreeWiFi":
-                    if (bool.TryParse(newValue, out bool wifi))
-                        HasFreeWiFi = wifi;
-                    else
-                    {
-                        if (newValue.ToLower() == "да")
-                            HasFreeWiFi = true;
-                        else if (newValue.ToLower() == "нет")
-                            HasFreeWiFi = false;
-                        else
-                            return false;
-                    }
-
-                    break;
-
-                default:
-                    return false; // поле не найдено
-            }
-        }
-        catch
-        {
-            return false; // произошли ошибки
-        }
-
-        return true; // успешно изменено
     }
 }
