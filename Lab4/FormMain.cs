@@ -27,6 +27,11 @@ public partial class FormMain : Form
         ShowView(_mainView);
     }
 
+    /// <summary>
+    /// Обновляет визуальное состояние главного меню (ставит "галочки").
+    /// Сравнивает текущее отображаемое представление с доступными экранами.
+    /// </summary>
+    /// <param name="view">Ссылка на текущий активный пользовательский контрол.</param>
     private void UpdateMenuState(UserControl view)
     {
         menuItemMain.Checked = ReferenceEquals(view, _mainView);
@@ -34,6 +39,10 @@ public partial class FormMain : Form
         menuItemGroup.Checked = ReferenceEquals(view, _groupView);
     }
 
+    /// <summary>
+    /// Переключает содержимое центральной панели на выбранное представление (View).
+    /// </summary>
+    /// <param name="view">Контрол, который нужно отобразить пользователю.</param>
     private void ShowView(UserControl view)
     {
         panelContent.Controls.Clear();

@@ -9,12 +9,12 @@ namespace Lab4;
 public interface IHotelComponent
 {
     /// <summary>
-    /// Имя компонента (для отеля — название, для коллекции — её логическое имя).
+    /// Имя компонента
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// Текстовое представление компонента с возможным отступом.
+    /// Текстовое представление компонента c отступом
     /// </summary>
     /// <param name="indent">Количество пробелов слева.</param>
     string Describe(int indent = 0);
