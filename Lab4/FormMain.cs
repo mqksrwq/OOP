@@ -12,6 +12,10 @@ public partial class FormMain : Form
     {
         InitializeComponent();
 
+        MessageBox.Show(this,
+            "Лабораторная №1 - Вариант 9 (Гостиница)\n\nГруппа 24ВП1 - Студенты: Бояркин Максим и Мишин Артём",
+            "Привет!!");
+        
         _mainView = new HotelsTreeViewControl();
         _hotelView = new HotelViewControl();
         _groupView = new GroupViewControl();

@@ -10,11 +10,15 @@ namespace Lab4;
 public class GroupViewControl : UserControl
 {
     private readonly TextBox _tbName;
+    private readonly TextBox _tbParent;
 
     public GroupViewControl()
     {
         var lblName = new Label { Text = "Название группы:", AutoSize = true };
         _tbName = new TextBox { Width = 200 };
+
+        var lblParent = new Label { Text = "Родительская группа:", AutoSize = true };
+        _tbParent = new TextBox { Width = 200 };
 
         var btnCreate = new Button { Text = "Создать группу", AutoSize = true };
         btnCreate.Click += (_, _) => CreateGroup();
@@ -27,7 +31,7 @@ public class GroupViewControl : UserControl
             Dock = DockStyle.Fill,
             Padding = new Padding(16),
             ColumnCount = 2,
-            RowCount = 4,
+            RowCount = 6,
             AutoSize = true
         };
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
@@ -36,6 +40,8 @@ public class GroupViewControl : UserControl
         int row = 0;
         layout.Controls.Add(lblName, 0, row);
         layout.Controls.Add(_tbName, 1, row++);
+        layout.Controls.Add(lblParent, 0, row);
+        layout.Controls.Add(_tbParent, 1, row++);
         layout.Controls.Add(btnCreate, 0, row);
         layout.Controls.Add(btnClear, 1, row);
 
@@ -61,9 +67,25 @@ public class GroupViewControl : UserControl
                 return;
             }
 
-            root.Add(new HotelsHashtableCollection(name));
+            // выбираем родителя
+            HotelsHashtableCollection parent = root;
+            var parentName = _tbParent.Text.Trim();
+            if (!string.IsNullOrEmpty(parentName))
+            {
+                var parentComp = root.Find(parentName);
+                if (parentComp is not HotelsHashtableCollection parentGroup)
+                {
+                    MessageBox.Show("Родительская группа не найдена.", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                parent = parentGroup;
+            }
+
+            parent.Add(new HotelsHashtableCollection(name));
             MessageBox.Show("Группа создана.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             _tbName.Clear();
+            _tbParent.Clear();
         }
         catch (Exception ex)
         {
