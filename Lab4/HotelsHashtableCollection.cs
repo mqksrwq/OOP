@@ -20,6 +20,13 @@ namespace Lab4
         // Событие изменений
         public event HotelsChangedHandler? Changed;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр коллекции отелей с заданным именем.
+        /// </summary>
+        /// <param name="name">
+        /// Логическое имя коллекции (используется как идентификатор узла в дереве Composite). 
+        /// По умолчанию — "HotelsCollection".
+        /// </param>
         public HotelsHashtableCollection(string name = "HotelsCollection")
         {
             Name = name;
@@ -73,7 +80,14 @@ namespace Lab4
                     "Коллекция очищена"));
         }
 
-        // Типизированный доступ
+        /// <summary>
+        /// Индексатор для доступа к компонентам коллекции по их имени (ключу).
+        /// Позволяет использовать синтаксис 'collection["Name"]' для получения или обновления элементов.
+        /// </summary>
+        /// <param name="key">Имя компонента (ключ в Hashtable).</param>
+        /// <returns>Найденный компонент или null, если ключ отсутствует.</returns>
+        /// <exception cref="ArgumentNullException">Выбрасывается при попытке присвоить null.</exception>
+        /// <exception cref="KeyNotFoundException">Выбрасывается при попытке обновить несуществующий ключ.</exception>
         public IHotelComponent? this[string key]
         {
             get => (IHotelComponent?)_items[key];
@@ -86,16 +100,27 @@ namespace Lab4
                     throw new KeyNotFoundException($"Ключ '{key}' не найден");
 
                 _items[key] = value;
+            
+                // Уведомляем подписчиков, что данные внутри конкретного узла обновились
                 Changed?.Invoke(this,
                     new HotelsChangedEventArgs("Updated", key, value,
                         $"Обновлён: {key}"));
             }
         }
 
+        /// <summary>
+        /// Предоставляет перечислитель для обхода всех дочерних элементов коллекции.
+        /// Реализует требование интерфейса IHotelComponent для композитных узлов.
+        /// </summary>
+        /// <remarks>
+        /// Использует итератор (yield return), что обеспечивает "ленивый" обход элементов 
+        /// без копирования всей коллекции в новый список, экономя оперативную память.
+        /// </remarks>
         public IEnumerable<IHotelComponent> Children
         {
             get
             {
+                // Перебираем значения Hashtable и приводим их к интерфейсу компонента
                 foreach (IHotelComponent h in _items.Values)
                     yield return h;
             }
