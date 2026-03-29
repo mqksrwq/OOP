@@ -90,24 +90,46 @@ public class Hotel : IHotelComponent
                $"Wi-Fi: {(HasFreeWiFi ? "Да" : "Нет")}\n";
     }
 
+    /// <summary>
+    /// Возвращает описание гостиницы с отступом
+    /// </summary>
+    /// <param name="indent">Количество пробелов для отступа</param>
+    /// <returns>Строковое описание гостиницы</returns>
     public string Describe(int indent = 0)
     {
         var pad = new string(' ', Math.Max(0, indent));
         return pad + ToString();
     }
 
+    /// <summary>
+    /// Не поддерживается для одиночной гостиницы
+    /// </summary>
+    /// <param name="component">Добавляемый компонент</param>
     public void Add(IHotelComponent component) =>
         throw new NotSupportedException("Нельзя добавить компонент к листу Hotel.");
 
+    /// <summary>
+    /// Не поддерживается для одиночной гостиницы
+    /// </summary>
+    /// <param name="name">Имя удаляемого компонента</param>
+    /// <returns>Всегда выбрасывает исключение</returns>
     public bool Remove(string name) =>
-        throw new NotSupportedException("Нельзя удалять дочерние элементы у листа Hotel.");
+        throw new NotSupportedException("Удаление не поддерживается листом.");
 
-    public IHotelComponent? Find(string name) => Name == name ? this : null;
-
-    public IEnumerable<IHotelComponent> Children
+    /// <summary>
+    /// Возвращает текущую гостиницу, если имена совпадают
+    /// </summary>
+    /// <param name="name">Имя для поиска</param>
+    /// <returns>Найденный компонент или null</returns>
+    public IHotelComponent? Find(string name)
     {
-        get { yield break; }
+        return Name == name ? this : null;
     }
+
+    /// <summary>
+    /// Пустая коллекция дочерних элементов для одиночной гостиницы
+    /// </summary>
+    public IEnumerable<IHotelComponent> Children => Array.Empty<IHotelComponent>();
 
     /// <summary>
     /// Метод для вывода значения определенного поля

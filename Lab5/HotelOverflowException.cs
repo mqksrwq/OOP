@@ -3,7 +3,14 @@
 /// </summary>
 public class HotelOverflowException : OverflowException
 {
+    /// <summary>
+    /// Название поля, в котором произошло переполнение
+    /// </summary>
     public string FieldName { get; }
+
+    /// <summary>
+    /// Значение, вызвавшее переполнение
+    /// </summary>
     public string Value { get; }
 
     /// <summary>

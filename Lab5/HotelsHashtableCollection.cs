@@ -5,6 +5,9 @@ using System.Collections.Generic;
 namespace Lab5
 {
     // Делегат для события изменений 
+    /// <summary>
+    /// Делегат для обработки событий изменения коллекции
+    /// </summary>
     public delegate void HotelsChangedHandler(object sender,
         HotelsChangedEventArgs e);
 
@@ -13,13 +16,26 @@ namespace Lab5
     /// </summary>
     public class HotelsHashtableCollection : IHotelComponent
     {
+        /// <summary>
+        /// Внутреннее хранилище элементов
+        /// </summary>
         private readonly Hashtable _items = new Hashtable();
 
+        /// <summary>
+        /// Наименование коллекции
+        /// </summary>
         public string Name { get; }
 
         // Событие изменений
+        /// <summary>
+        /// Возникает при изменении состава коллекции
+        /// </summary>
         public event HotelsChangedHandler? Changed;
 
+        /// <summary>
+        /// Инициализирует новую коллекцию
+        /// </summary>
+        /// <param name="name">Название коллекции</param>
         public HotelsHashtableCollection(string name = "HotelsCollection")
         {
             Name = name;
@@ -74,6 +90,11 @@ namespace Lab5
         }
 
         // Типизированный доступ
+        /// <summary>
+        /// Возвращает или задает компонент по ключу
+        /// </summary>
+        /// <param name="key">Ключ компонента</param>
+        /// <returns>Найденный компонент</returns>
         public IHotelComponent? this[string key]
         {
             get => (IHotelComponent?)_items[key];
@@ -92,6 +113,9 @@ namespace Lab5
             }
         }
 
+        /// <summary>
+        /// Возвращает все дочерние элементы коллекции
+        /// </summary>
         public IEnumerable<IHotelComponent> Children
         {
             get

@@ -9,11 +9,24 @@ public sealed class HotelAppState
     private static readonly Lazy<HotelAppState> _instance =
         new(() => new HotelAppState());
 
+    /// <summary>
+    /// Единственный экземпляр состояния приложения
+    /// </summary>
     public static HotelAppState Instance => _instance.Value;
 
+    /// <summary>
+    /// Коллекция всех гостиниц и их групп
+    /// </summary>
     public HotelsHashtableCollection Hotels { get; }
+
+    /// <summary>
+    /// Слушатель событий изменения коллекции гостиниц
+    /// </summary>
     public HotelsCollectionListener Listener { get; }
 
+    /// <summary>
+    /// Скрытый конструктор
+    /// </summary>
     private HotelAppState()
     {
         Hotels = new HotelsHashtableCollection();

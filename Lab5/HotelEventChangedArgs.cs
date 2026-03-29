@@ -7,13 +7,24 @@ namespace Lab5
     /// </summary>
     public class HotelsChangedEventArgs : EventArgs
     {
-        // События
+        /// <summary>
+        /// Наименование действия
+        /// </summary>
         public string Action { get; }
 
-        // Доступ по ключу
+        /// <summary>
+        /// Ключ, по которому произошел доступ
+        /// </summary>
         public string Key { get; }
 
+        /// <summary>
+        /// Затронутый компонент
+        /// </summary>
         public IHotelComponent? Component { get; }
+
+        /// <summary>
+        /// Сообщение о событии
+        /// </summary>
         public string Message { get; }
 
         /// <summary>

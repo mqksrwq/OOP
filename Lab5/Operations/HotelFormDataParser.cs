@@ -2,8 +2,18 @@ using System.Windows.Forms;
 
 namespace Lab5.Operations;
 
+/// <summary>
+/// Парсер данных формы гостиницы
+/// </summary>
 internal static class HotelFormDataParser
 {
+    /// <summary>
+    /// Пытается создать объекты группы и гостиницы из данных формы
+    /// </summary>
+    /// <param name="data">Входные данные формы</param>
+    /// <param name="group">Возвращаемая группа гостиниц</param>
+    /// <param name="hotel">Возвращаемая гостиница</param>
+    /// <returns>Признак успешного парсинга и создания объектов</returns>
     public static bool TryBuild(HotelFormData data, out HotelsHashtableCollection group, out Hotel hotel)
     {
         group = null!;

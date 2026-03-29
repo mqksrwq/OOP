@@ -7,6 +7,9 @@ namespace Lab5
     /// </summary>
     public class HotelsCollectionListener
     {
+        /// <summary>
+        /// Коллекция для отслеживания событий
+        /// </summary>
         private readonly HotelsHashtableCollection _collection;
 
         /// <summary>
