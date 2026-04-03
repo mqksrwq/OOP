@@ -20,12 +20,8 @@ namespace Lab6
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            Hide();
-            using (var methodsForm = new AsyncMethodsForm())
-            {
-                methodsForm.ShowDialog(this);
-            }
-            Show();
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

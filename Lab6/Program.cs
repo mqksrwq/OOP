@@ -16,7 +16,14 @@ namespace Lab6
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            using (var welcomeForm = new Form1())
+            {
+                if (welcomeForm.ShowDialog() == DialogResult.OK)
+                {
+                    Application.Run(new AsyncMethodsForm());
+                }
+            }
         }
     }
 }
