@@ -117,4 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Бояркин М., Мишин М. - Вариант 9. Задание: Реализовать программу с вызовом асинхронных методов. Реализовать три
+асинхронных метода: расчет функции, вывод системного времени и третье
+действие на усмотрение группы. Пользователь вызывает методы из оконной
+формы. Работа методов выводится в компоненты оконной формы.
+
+</value>
+  </data>
 </root>
