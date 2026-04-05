@@ -9,11 +9,21 @@ namespace Lab6
     public partial class AsyncMethodsForm : Form
     {
         private static readonly Random _random = new Random();
+        private readonly Timer _clockTimer;
 
         public AsyncMethodsForm()
         {
             InitializeComponent();
             MinimumSize = Size;
+
+            labelTimeResult.AutoSize = true;
+            PositionServerTimeLabel();
+
+            _clockTimer = new Timer { Interval = 1000 };
+            _clockTimer.Tick += (s, e) => UpdateServerTime();
+            UpdateServerTime();
+            _clockTimer.Start();
+            FormClosed += (s, e) => _clockTimer.Stop();
         }
 
         private async void buttonCalculateAverage_Click(object sender, EventArgs e)
@@ -36,17 +46,6 @@ namespace Lab6
             {
                 buttonCalculateAverage.Enabled = true;
             }
-        }
-
-        private async void buttonShowTime_Click(object sender, EventArgs e)
-        {
-            buttonShowTime.Enabled = false;
-            labelTimeResult.Text = "Системное время: обновление...";
-
-            var time = await GetSystemTimeAsync();
-            labelTimeResult.Text = $"Системное время: {time}";
-
-            buttonShowTime.Enabled = true;
         }
 
         private async void buttonThirdAction_Click(object sender, EventArgs e)
@@ -76,10 +75,22 @@ namespace Lab6
             return await Task.Run(() => values.Average());
         }
 
-        private async Task<string> GetSystemTimeAsync()
+        private void UpdateServerTime()
         {
-            await Task.Delay(250);
-            return DateTime.Now.ToString("HH:mm:ss");
+            labelTimeResult.Text = $"Серверное время: {DateTime.Now:HH:mm:ss}";
+            PositionServerTimeLabel();
+        }
+
+        private void PositionServerTimeLabel()
+        {
+            labelTimeResult.Visible = true;
+            labelTimeResult.BringToFront();
+            labelTimeResult.Top = 20;
+            labelTimeResult.Left = ClientSize.Width - labelTimeResult.PreferredWidth - 20;
+
+            int maxInfoWidth = labelTimeResult.Left - labelInfoTop.Left - 12;
+            if (maxInfoWidth > 100)
+                labelInfoTop.Width = maxInfoWidth;
         }
 
         private async Task<string> GenerateRandomStatusAsync()

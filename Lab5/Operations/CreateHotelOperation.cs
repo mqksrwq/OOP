@@ -34,7 +34,7 @@ public sealed class CreateHotelOperation : UiOperationTemplate
     /// <returns>Признак успешной валидации</returns>
     protected override bool Validate()
     {
-        return HotelFormDataParser.TryBuild(_data, out _group, out _hotel);
+        return HotelFormDataParser.TryBuild(_data, out _group!, out _hotel!);
     }
 
     /// <summary>

@@ -14,10 +14,10 @@ internal static class HotelFormDataParser
     /// <param name="group">Возвращаемая группа гостиниц</param>
     /// <param name="hotel">Возвращаемая гостиница</param>
     /// <returns>Признак успешного парсинга и создания объектов</returns>
-    public static bool TryBuild(HotelFormData data, out HotelsHashtableCollection group, out Hotel hotel)
+    public static bool TryBuild(HotelFormData data, out HotelsHashtableCollection? group, out Hotel? hotel)
     {
-        group = null!;
-        hotel = null!;
+        group = null;
+        hotel = null;
 
         var groupName = data.GroupName.Trim();
         if (string.IsNullOrWhiteSpace(groupName))

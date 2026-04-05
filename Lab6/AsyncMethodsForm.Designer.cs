@@ -22,7 +22,6 @@ namespace Lab6
             this.textBoxVectorInput = new System.Windows.Forms.TextBox();
             this.buttonCalculateAverage = new System.Windows.Forms.Button();
             this.labelAverageResult = new System.Windows.Forms.Label();
-            this.buttonShowTime = new System.Windows.Forms.Button();
             this.labelTimeResult = new System.Windows.Forms.Label();
             this.buttonThirdAction = new System.Windows.Forms.Button();
             this.labelThirdActionInfo = new System.Windows.Forms.Label();
@@ -31,12 +30,11 @@ namespace Lab6
             // 
             // labelInfoTop
             // 
-            this.labelInfoTop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelInfoTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfoTop.AutoSize = false;
             this.labelInfoTop.Location = new System.Drawing.Point(28, 20);
             this.labelInfoTop.Name = "labelInfoTop";
-            this.labelInfoTop.Size = new System.Drawing.Size(918, 50);
+            this.labelInfoTop.Size = new System.Drawing.Size(660, 50);
             this.labelInfoTop.TabIndex = 0;
             this.labelInfoTop.Text = "На форме запускаются 3 асинхронных действия: расчет среднего, получение времени и третье действие";
             // 
@@ -76,24 +74,15 @@ namespace Lab6
             this.labelAverageResult.TabIndex = 4;
             this.labelAverageResult.Text = "Результат: -";
             // 
-            // buttonShowTime
-            // 
-            this.buttonShowTime.Location = new System.Drawing.Point(33, 256);
-            this.buttonShowTime.Name = "buttonShowTime";
-            this.buttonShowTime.Size = new System.Drawing.Size(328, 49);
-            this.buttonShowTime.TabIndex = 5;
-            this.buttonShowTime.Text = "Показать время";
-            this.buttonShowTime.UseVisualStyleBackColor = true;
-            this.buttonShowTime.Click += new System.EventHandler(this.buttonShowTime_Click);
-            // 
             // labelTimeResult
             // 
+            this.labelTimeResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTimeResult.AutoSize = true;
-            this.labelTimeResult.Location = new System.Drawing.Point(28, 320);
+            this.labelTimeResult.Location = new System.Drawing.Point(696, 20);
             this.labelTimeResult.Name = "labelTimeResult";
-            this.labelTimeResult.Size = new System.Drawing.Size(186, 25);
-            this.labelTimeResult.TabIndex = 6;
-            this.labelTimeResult.Text = "Системное время: -";
+            this.labelTimeResult.Size = new System.Drawing.Size(236, 25);
+            this.labelTimeResult.TabIndex = 5;
+            this.labelTimeResult.Text = "Серверное время: 00:00:00";
             // 
             // buttonThirdAction
             // 
@@ -133,11 +122,13 @@ namespace Lab6
             this.Controls.Add(this.labelThirdActionResult);
             this.Controls.Add(this.buttonThirdAction);
             this.Controls.Add(this.labelTimeResult);
-            this.Controls.Add(this.buttonShowTime);
             this.Controls.Add(this.labelAverageResult);
             this.Controls.Add(this.buttonCalculateAverage);
             this.Controls.Add(this.textBoxVectorInput);
             this.Controls.Add(this.labelVector);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AsyncMethodsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Асинхронные методы";
@@ -153,7 +144,6 @@ namespace Lab6
         private System.Windows.Forms.TextBox textBoxVectorInput;
         private System.Windows.Forms.Button buttonCalculateAverage;
         private System.Windows.Forms.Label labelAverageResult;
-        private System.Windows.Forms.Button buttonShowTime;
         private System.Windows.Forms.Label labelTimeResult;
         private System.Windows.Forms.Button buttonThirdAction;
         private System.Windows.Forms.Label labelThirdActionInfo;

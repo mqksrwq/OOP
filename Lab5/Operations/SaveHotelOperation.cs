@@ -13,8 +13,8 @@ public sealed class SaveHotelOperation : UiOperationTemplate
     private readonly HotelFormData _data;
     private readonly Action? _afterSuccess;
 
-    private HotelsHashtableCollection _targetGroup = null!;
-    private Hotel _newHotel = null!;
+    private HotelsHashtableCollection? _targetGroup;
+    private Hotel? _newHotel;
 
     /// <summary>
     /// Инициализирует операцию сохранения гостиницы
@@ -62,7 +62,7 @@ public sealed class SaveHotelOperation : UiOperationTemplate
     protected override void ExecuteCore()
     {
         _currentGroup?.Remove(_currentHotel!.Name);
-        _targetGroup.Add(_newHotel);
+        _targetGroup?.Add(_newHotel!);
     }
 
     /// <summary>
