@@ -30,26 +30,25 @@ namespace Lab6
             // 
             // labelInfoTop
             // 
-            this.labelInfoTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelInfoTop.AutoSize = false;
             this.labelInfoTop.Location = new System.Drawing.Point(28, 20);
             this.labelInfoTop.Name = "labelInfoTop";
             this.labelInfoTop.Size = new System.Drawing.Size(660, 50);
             this.labelInfoTop.TabIndex = 0;
-            this.labelInfoTop.Text = "На форме запускаются 3 асинхронных действия: расчет среднего, получение времени и третье действие";
+            this.labelInfoTop.Text = "На форме запускаются 3 асинхронных действия: расчет среднего, получение времени и" +
+    " третье действие";
             // 
             // labelVector
             // 
             this.labelVector.AutoSize = true;
-            this.labelVector.Location = new System.Drawing.Point(28, 66);
+            this.labelVector.Location = new System.Drawing.Point(28, 105);
             this.labelVector.Name = "labelVector";
-            this.labelVector.Size = new System.Drawing.Size(326, 25);
+            this.labelVector.Size = new System.Drawing.Size(392, 25);
             this.labelVector.TabIndex = 1;
             this.labelVector.Text = "Вектор чисел (через пробел/запятую)";
             // 
             // textBoxVectorInput
             // 
-            this.textBoxVectorInput.Location = new System.Drawing.Point(33, 95);
+            this.textBoxVectorInput.Location = new System.Drawing.Point(33, 147);
             this.textBoxVectorInput.Name = "textBoxVectorInput";
             this.textBoxVectorInput.Size = new System.Drawing.Size(913, 31);
             this.textBoxVectorInput.TabIndex = 2;
@@ -57,7 +56,7 @@ namespace Lab6
             // 
             // buttonCalculateAverage
             // 
-            this.buttonCalculateAverage.Location = new System.Drawing.Point(33, 146);
+            this.buttonCalculateAverage.Location = new System.Drawing.Point(33, 234);
             this.buttonCalculateAverage.Name = "buttonCalculateAverage";
             this.buttonCalculateAverage.Size = new System.Drawing.Size(328, 49);
             this.buttonCalculateAverage.TabIndex = 3;
@@ -68,9 +67,9 @@ namespace Lab6
             // labelAverageResult
             // 
             this.labelAverageResult.AutoSize = true;
-            this.labelAverageResult.Location = new System.Drawing.Point(28, 210);
+            this.labelAverageResult.Location = new System.Drawing.Point(28, 295);
             this.labelAverageResult.Name = "labelAverageResult";
-            this.labelAverageResult.Size = new System.Drawing.Size(108, 25);
+            this.labelAverageResult.Size = new System.Drawing.Size(134, 25);
             this.labelAverageResult.TabIndex = 4;
             this.labelAverageResult.Text = "Результат: -";
             // 
@@ -80,7 +79,7 @@ namespace Lab6
             this.labelTimeResult.AutoSize = true;
             this.labelTimeResult.Location = new System.Drawing.Point(696, 20);
             this.labelTimeResult.Name = "labelTimeResult";
-            this.labelTimeResult.Size = new System.Drawing.Size(236, 25);
+            this.labelTimeResult.Size = new System.Drawing.Size(285, 25);
             this.labelTimeResult.TabIndex = 5;
             this.labelTimeResult.Text = "Серверное время: 00:00:00";
             // 
@@ -99,16 +98,17 @@ namespace Lab6
             this.labelThirdActionInfo.AutoSize = true;
             this.labelThirdActionInfo.Location = new System.Drawing.Point(28, 428);
             this.labelThirdActionInfo.Name = "labelThirdActionInfo";
-            this.labelThirdActionInfo.Size = new System.Drawing.Size(838, 25);
+            this.labelThirdActionInfo.Size = new System.Drawing.Size(951, 25);
             this.labelThirdActionInfo.TabIndex = 8;
-            this.labelThirdActionInfo.Text = "Третье действие: асинхронно генерирует случайное число и показывает, четное оно или нет";
+            this.labelThirdActionInfo.Text = "Третье действие: асинхронно генерирует случайное число и показывает, четное оно и" +
+    "ли нет";
             // 
             // labelThirdActionResult
             // 
             this.labelThirdActionResult.AutoSize = true;
             this.labelThirdActionResult.Location = new System.Drawing.Point(28, 464);
             this.labelThirdActionResult.Name = "labelThirdActionResult";
-            this.labelThirdActionResult.Size = new System.Drawing.Size(195, 25);
+            this.labelThirdActionResult.Size = new System.Drawing.Size(199, 25);
             this.labelThirdActionResult.TabIndex = 9;
             this.labelThirdActionResult.Text = "Третье действие: -";
             // 

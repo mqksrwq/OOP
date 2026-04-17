@@ -65,9 +65,14 @@ namespace Lab6
             if (parts.Length == 0)
                 throw new InvalidOperationException("Введите значения вектора");
 
-            return parts
-                .Select(p => double.Parse(p, CultureInfo.InvariantCulture))
-                .ToArray();
+            var values = new double[parts.Length];
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (!double.TryParse(parts[i], NumberStyles.Float, CultureInfo.InvariantCulture, out values[i]))
+                    throw new InvalidOperationException("Вектор должен содержать только числовые значения");
+            }
+
+            return values;
         }
 
         private async Task<double> CalculateAverageAsync(double[] values)
@@ -96,7 +101,7 @@ namespace Lab6
         private async Task<string> GenerateRandomStatusAsync()
         {
             await Task.Delay(700);
-            var number = _random.Next(1, 101);
+            var number = _random.Next(1, 10001);
             return $"Случайное число {number}, четное: {(number % 2 == 0 ? "да" : "нет")}";
         }
     }
