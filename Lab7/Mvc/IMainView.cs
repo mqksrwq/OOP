@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Lab7;
 
 /// <summary>
-/// Контракт главного представления в MVP.
+/// Контракт главного представления в MVC.
 /// Определяет события навигации и операции отображения экранов.
 /// </summary>
 public interface IMainView

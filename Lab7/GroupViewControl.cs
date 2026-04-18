@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Lab7;
 
 /// <summary>
-/// Представление (View) для работы с группами гостиниц в паттерне MVP.
+/// Представление (View) для работы с группами гостиниц в паттерне MVC.
 /// </summary>
 public class GroupViewControl : UserControl
     , IGroupView

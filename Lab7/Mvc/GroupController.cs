@@ -3,10 +3,10 @@
 namespace Lab7;
 
 /// <summary>
-/// Presenter экрана групп гостиниц.
-/// Управляет созданием групп и очисткой формы в рамках MVP.
+/// Контроллер экрана групп гостиниц.
+/// Управляет созданием групп и очисткой формы в рамках MVC.
 /// </summary>
-public sealed class GroupPresenter
+public sealed class GroupController
 {
     /// <summary>
     /// Представление экрана групп.
@@ -14,10 +14,10 @@ public sealed class GroupPresenter
     private readonly IGroupView _view;
 
     /// <summary>
-    /// Инициализирует presenter и подписывает обработчики событий представления.
+    /// Инициализирует контроллер и подписывает обработчики событий представления.
     /// </summary>
     /// <param name="view">Представление экрана групп.</param>
-    public GroupPresenter(IGroupView view)
+    public GroupController(IGroupView view)
     {
         _view = view;
 

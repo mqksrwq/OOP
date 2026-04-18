@@ -3,10 +3,10 @@
 namespace Lab7;
 
 /// <summary>
-/// Presenter экрана гостиницы.
-/// Содержит логику поиска, создания и сохранения гостиниц в паттерне MVP.
+/// Контроллер экрана гостиницы.
+/// Содержит логику поиска, создания и сохранения гостиниц в паттерне MVC.
 /// </summary>
-public sealed class HotelPresenter
+public sealed class HotelController
 {
     /// <summary>
     /// Представление формы гостиницы.
@@ -24,10 +24,10 @@ public sealed class HotelPresenter
     private Hotel? _currentHotel;
 
     /// <summary>
-    /// Инициализирует presenter и подписывает обработчики событий представления.
+    /// Инициализирует контроллер и подписывает обработчики событий представления.
     /// </summary>
     /// <param name="view">Представление формы гостиницы.</param>
-    public HotelPresenter(IHotelView view)
+    public HotelController(IHotelView view)
     {
         _view = view;
 
@@ -79,7 +79,7 @@ public sealed class HotelPresenter
     }
 
     /// <summary>
-    /// Полностью очищает форму и внутреннее состояние presenter-а.
+    /// Полностью очищает форму и внутреннее состояние контроллера.
     /// </summary>
     private void ResetFormState()
     {

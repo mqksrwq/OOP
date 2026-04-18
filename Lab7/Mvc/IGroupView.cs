@@ -3,7 +3,7 @@
 namespace Lab7;
 
 /// <summary>
-/// Контракт представления формы групп в MVP.
+/// Контракт представления формы групп в MVC.
 /// </summary>
 public interface IGroupView
 {

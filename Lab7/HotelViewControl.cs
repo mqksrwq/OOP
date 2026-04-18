@@ -6,7 +6,7 @@ using Lab7.Operations;
 namespace Lab7;
 
 /// <summary>
-/// Представление (View) для работы с одной гостиницей в паттерне MVP.
+/// Представление (View) для работы с одной гостиницей в паттерне MVC.
 /// </summary>
 public class HotelViewControl : UserControl
     , IHotelView
@@ -92,7 +92,7 @@ public class HotelViewControl : UserControl
     public event EventHandler? ClearRequested;
 
     /// <summary>
-    /// Инициализирует визуальные элементы и связывает UI-события с MVP-событиями.
+    /// Инициализирует визуальные элементы и связывает UI-события с обработчиками контроллера.
     /// </summary>
     public HotelViewControl()
     {

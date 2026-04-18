@@ -4,7 +4,7 @@ using Lab7.Operations;
 namespace Lab7;
 
 /// <summary>
-/// Контракт представления формы гостиницы в MVP.
+/// Контракт представления формы гостиницы в MVC.
 /// </summary>
 public interface IHotelView
 {

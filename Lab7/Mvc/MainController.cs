@@ -4,10 +4,10 @@ using System.Windows.Forms;
 namespace Lab7;
 
 /// <summary>
-/// Presenter главного экрана.
-/// Отвечает за навигацию между представлениями в стиле MVP.
+/// Контроллер главного экрана.
+/// Отвечает за навигацию между представлениями в стиле MVC.
 /// </summary>
-public sealed class MainPresenter
+public sealed class MainController
 {
     /// <summary>
     /// Представление главной формы.
@@ -30,13 +30,13 @@ public sealed class MainPresenter
     private readonly GroupViewControl _groupView;
 
     /// <summary>
-    /// Инициализирует presenter и подписывает обработчики событий навигации.
+    /// Инициализирует контроллер и подписывает обработчики событий навигации.
     /// </summary>
     /// <param name="view">Главное представление.</param>
     /// <param name="mainView">Экран дерева гостиниц.</param>
     /// <param name="hotelView">Экран редактирования гостиниц.</param>
     /// <param name="groupView">Экран работы с группами.</param>
-    public MainPresenter(
+    public MainController(
         IMainView view,
         HotelsTreeViewControl mainView,
         HotelViewControl hotelView,

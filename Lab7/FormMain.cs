@@ -21,19 +21,19 @@ public partial class FormMain : Form, IMainView
     private readonly GroupViewControl _groupView;
 
     /// <summary>
-    /// Presenter ???????? ???? (????????? ????? ????????).
+    /// ?????????? ???????? ???? (????????? ????? ????????).
     /// </summary>
-    private readonly MainPresenter _mainPresenter;
+    private readonly MainController _mainController;
 
     /// <summary>
-    /// Presenter ????? ?????? ? ???????????.
+    /// ?????????? ????? ?????? ? ???????????.
     /// </summary>
-    private readonly HotelPresenter _hotelPresenter;
+    private readonly HotelController _hotelController;
 
     /// <summary>
-    /// Presenter ????? ?????? ? ????????.
+    /// ?????????? ????? ?????? ? ????????.
     /// </summary>
-    private readonly GroupPresenter _groupPresenter;
+    private readonly GroupController _groupController;
 
     /// <summary>
     /// ??????? ??????? ???????? ?? ??????? ?????.
@@ -58,16 +58,16 @@ public partial class FormMain : Form, IMainView
         InitializeComponent();
 
         MessageBox.Show(this,
-            "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f \u21167 - \u0412\u0430\u0440\u0438\u0430\u043d\u0442 9 (\u0413\u043e\u0441\u0442\u0438\u043d\u0438\u0446\u0430, MVP)\n\n\u0413\u0440\u0443\u043f\u043f\u0430 24\u0412\u041f1 - \u0421\u0442\u0443\u0434\u0435\u043d\u0442\u044b: \u0411\u043e\u044f\u0440\u043a\u0438\u043d \u041c\u0430\u043a\u0441\u0438\u043c \u0438 \u041c\u0438\u0448\u0438\u043d \u0410\u0440\u0442\u0451\u043c",
+            "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f \u21167 - \u0412\u0430\u0440\u0438\u0430\u043d\u0442 9 (\u0413\u043e\u0441\u0442\u0438\u043d\u0438\u0446\u0430, MVC)\n\n\u0413\u0440\u0443\u043f\u043f\u0430 24\u0412\u041f1 - \u0421\u0442\u0443\u0434\u0435\u043d\u0442\u044b: \u0411\u043e\u044f\u0440\u043a\u0438\u043d \u041c\u0430\u043a\u0441\u0438\u043c \u0438 \u041c\u0438\u0448\u0438\u043d \u0410\u0440\u0442\u0451\u043c",
             "\u041f\u0440\u0438\u0432\u0435\u0442!!");
 
         _mainView = new HotelsTreeViewControl();
         _hotelView = new HotelViewControl();
         _groupView = new GroupViewControl();
 
-        _hotelPresenter = new HotelPresenter(_hotelView);
-        _groupPresenter = new GroupPresenter(_groupView);
-        _mainPresenter = new MainPresenter(this, _mainView, _hotelView, _groupView);
+        _hotelController = new HotelController(_hotelView);
+        _groupController = new GroupController(_groupView);
+        _mainController = new MainController(this, _mainView, _hotelView, _groupView);
 
         menuItemMain.Click += (_, _) => MainViewRequested?.Invoke(this, EventArgs.Empty);
         menuItemHotel.Click += (_, _) => HotelViewRequested?.Invoke(this, EventArgs.Empty);
