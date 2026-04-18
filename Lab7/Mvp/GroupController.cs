@@ -1,6 +1,6 @@
-using Lab5.Operations;
+﻿using Lab7.Operations;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Presenter экрана групп гостиниц.
@@ -27,3 +27,5 @@ public sealed class GroupPresenter
         _view.ClearRequested += (_, _) => _view.ClearForm();
     }
 }
+
+

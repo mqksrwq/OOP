@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lab5
+namespace Lab7
 {
     /// <summary>
     /// Контейнер данных о событии
@@ -43,3 +43,4 @@ namespace Lab5
         }
     }
 }
+

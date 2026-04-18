@@ -1,6 +1,6 @@
-using System.Text;
+﻿using System.Text;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Точка входа Windows Forms приложения Lab7.
@@ -21,3 +21,4 @@ static class Program
         Application.Run(new FormMain());
     }
 }
+

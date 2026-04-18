@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Представление дерева групп и гостиниц.
@@ -117,3 +117,5 @@ public class HotelsTreeViewControl : UserControl
         base.Dispose(disposing);
     }
 }
+
+

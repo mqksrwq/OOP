@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace Lab5.Operations;
+namespace Lab7.Operations;
 
 /// <summary>
 /// Операция создания новой гостиницы
@@ -69,4 +69,6 @@ public sealed class CreateHotelOperation : UiOperationTemplate
         _afterSuccess?.Invoke();
     }
 }
+
+
 

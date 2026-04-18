@@ -1,7 +1,7 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Представление (View) для работы с группами гостиниц в паттерне MVP.
@@ -87,3 +87,5 @@ public class GroupViewControl : UserControl
         _tbParent.Clear();
     }
 }
+
+

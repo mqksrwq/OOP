@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Lab5.Operations;
+using Lab7.Operations;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Представление (View) для работы с одной гостиницей в паттерне MVP.
@@ -247,3 +247,5 @@ public class HotelViewControl : UserControl
         _btnSave.Enabled = enabled;
     }
 }
+
+

@@ -1,6 +1,6 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
-namespace Lab5.Operations;
+namespace Lab7.Operations;
 
 /// <summary>
 /// Парсер данных формы гостиницы
@@ -77,4 +77,6 @@ internal static class HotelFormDataParser
         return true;
     }
 }
+
+
 

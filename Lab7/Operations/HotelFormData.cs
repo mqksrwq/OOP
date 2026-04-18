@@ -1,4 +1,4 @@
-namespace Lab5.Operations;
+﻿namespace Lab7.Operations;
 
 /// <summary>
 /// Данные формы для создания или обновления гостиницы
@@ -21,4 +21,6 @@ public sealed record HotelFormData(
     string RatingText,
     bool HasFreeWiFi
 );
+
+
 

@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace Lab5.Operations;
+namespace Lab7.Operations;
 
 /// <summary>
 /// Шаблонный класс для UI операций
@@ -60,3 +60,4 @@ public abstract class UiOperationTemplate
         MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }
+

@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Контракт представления формы групп в MVP.
@@ -32,3 +32,5 @@ public interface IGroupView
     /// </summary>
     void ClearForm();
 }
+
+

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Lab5
+namespace Lab7
 {
     // Делегат для события изменений 
     /// <summary>
@@ -166,3 +166,5 @@ namespace Lab5
         }
     }
 }
+
+

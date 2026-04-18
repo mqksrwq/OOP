@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Класс гостиницы (лист в паттерне Composite)
@@ -262,3 +262,5 @@ public class Hotel : IHotelComponent
         return true; // успешно изменено
     }
 }
+
+

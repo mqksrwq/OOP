@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Presenter главного экрана.
@@ -65,3 +65,5 @@ public sealed class MainPresenter
         _view.SetMenuState(main, hotel, group);
     }
 }
+
+

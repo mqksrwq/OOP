@@ -1,4 +1,4 @@
-namespace Lab5;
+﻿namespace Lab7;
 
 /// <summary>
 /// Глобальное состояние приложения.
@@ -36,3 +36,4 @@ public sealed class HotelAppState
         Listener = new HotelsCollectionListener(Hotels);
     }
 }
+

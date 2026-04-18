@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Контракт главного представления в MVP.
@@ -38,3 +38,5 @@ public interface IMainView
     /// <param name="isGroupActive">Активность пункта групп.</param>
     void SetMenuState(bool isMainActive, bool isHotelActive, bool isGroupActive);
 }
+
+

@@ -1,7 +1,7 @@
-using System;
-using Lab5.Operations;
+﻿using System;
+using Lab7.Operations;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Контракт представления формы гостиницы в MVP.
@@ -63,3 +63,5 @@ public interface IHotelView
     /// <param name="message">Текст сообщения.</param>
     void ShowInfo(string message);
 }
+
+

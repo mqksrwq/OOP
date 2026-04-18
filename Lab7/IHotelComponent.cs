@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Lab5;
+namespace Lab7;
 
 /// <summary>
 /// Общий интерфейс для листьев и композитов «Гостиница/Коллекция».
@@ -39,3 +39,5 @@ public interface IHotelComponent
     /// </summary>
     IEnumerable<IHotelComponent> Children { get; }
 }
+
+

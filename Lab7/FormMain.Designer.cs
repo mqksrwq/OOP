@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Lab5;
+namespace Lab7;
 
 public partial class FormMain
 {
@@ -73,3 +73,4 @@ public partial class FormMain
         PerformLayout();
     }
 }
+

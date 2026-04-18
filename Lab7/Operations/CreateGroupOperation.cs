@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace Lab5.Operations;
+namespace Lab7.Operations;
 
 /// <summary>
 /// Операция создания новой группы гостиниц
@@ -99,4 +99,6 @@ public sealed class CreateGroupOperation : UiOperationTemplate
         _afterSuccess?.Invoke();
     }
 }
+
+
 

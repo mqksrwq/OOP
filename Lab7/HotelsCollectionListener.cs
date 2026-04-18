@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lab5
+namespace Lab7
 {
     /// <summary>
     /// Слушатель событий

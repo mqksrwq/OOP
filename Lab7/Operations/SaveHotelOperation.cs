@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace Lab5.Operations;
+namespace Lab7.Operations;
 
 /// <summary>
 /// Операция сохранения отредактированной гостиницы
@@ -96,4 +96,6 @@ public sealed class SaveHotelOperation : UiOperationTemplate
         _afterSuccess?.Invoke();
     }
 }
+
+
 
