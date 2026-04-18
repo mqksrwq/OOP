@@ -58,8 +58,8 @@ public partial class FormMain : Form, IMainView
         InitializeComponent();
 
         MessageBox.Show(this,
-            "???????????? ?7 - ??????? 9 (?????????, MVP)\n\n?????? 24??1 - ????????: ??????? ?????? ? ????? ?????",
-            "??????!!");
+            "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f \u21167 - \u0412\u0430\u0440\u0438\u0430\u043d\u0442 9 (\u0413\u043e\u0441\u0442\u0438\u043d\u0438\u0446\u0430, MVP)\n\n\u0413\u0440\u0443\u043f\u043f\u0430 24\u0412\u041f1 - \u0421\u0442\u0443\u0434\u0435\u043d\u0442\u044b: \u0411\u043e\u044f\u0440\u043a\u0438\u043d \u041c\u0430\u043a\u0441\u0438\u043c \u0438 \u041c\u0438\u0448\u0438\u043d \u0410\u0440\u0442\u0451\u043c",
+            "\u041f\u0440\u0438\u0432\u0435\u0442!!");
 
         _mainView = new HotelsTreeViewControl();
         _hotelView = new HotelViewControl();
