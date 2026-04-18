@@ -63,7 +63,7 @@ namespace Lab6
         {
             var parts = raw.Split(new[] { ' ', ';', ',', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 0)
-                throw new InvalidOperationException("Введите значения вектора");
+                throw new InvalidOperationException("Введите значения вектора:");
 
             var values = new double[parts.Length];
             for (int i = 0; i < parts.Length; i++)
@@ -102,7 +102,7 @@ namespace Lab6
         {
             await Task.Delay(700);
             var number = _random.Next(1, 10001);
-            return $"Случайное число {number}, четное: {(number % 2 == 0 ? "да" : "нет")}";
+            return $"псевдоcлучайное число {number}, четное: {(number % 2 == 0 ? "да" : "нет")}";
         }
     }
 }

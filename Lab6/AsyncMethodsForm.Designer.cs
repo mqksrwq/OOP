@@ -42,9 +42,9 @@ namespace Lab6
             this.labelVector.AutoSize = true;
             this.labelVector.Location = new System.Drawing.Point(28, 105);
             this.labelVector.Name = "labelVector";
-            this.labelVector.Size = new System.Drawing.Size(392, 25);
+            this.labelVector.Size = new System.Drawing.Size(398, 25);
             this.labelVector.TabIndex = 1;
-            this.labelVector.Text = "Вектор чисел (через пробел/запятую)";
+            this.labelVector.Text = "Вектор чисел (через пробел/запятую):";
             // 
             // textBoxVectorInput
             // 
@@ -69,15 +69,15 @@ namespace Lab6
             this.labelAverageResult.AutoSize = true;
             this.labelAverageResult.Location = new System.Drawing.Point(28, 295);
             this.labelAverageResult.Name = "labelAverageResult";
-            this.labelAverageResult.Size = new System.Drawing.Size(134, 25);
+            this.labelAverageResult.Size = new System.Drawing.Size(127, 25);
             this.labelAverageResult.TabIndex = 4;
-            this.labelAverageResult.Text = "Результат: -";
+            this.labelAverageResult.Text = "Результат: ";
             // 
             // labelTimeResult
             // 
             this.labelTimeResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTimeResult.AutoSize = true;
-            this.labelTimeResult.Location = new System.Drawing.Point(696, 20);
+            this.labelTimeResult.Location = new System.Drawing.Point(791, 20);
             this.labelTimeResult.Name = "labelTimeResult";
             this.labelTimeResult.Size = new System.Drawing.Size(285, 25);
             this.labelTimeResult.TabIndex = 5;
@@ -98,25 +98,25 @@ namespace Lab6
             this.labelThirdActionInfo.AutoSize = true;
             this.labelThirdActionInfo.Location = new System.Drawing.Point(28, 428);
             this.labelThirdActionInfo.Name = "labelThirdActionInfo";
-            this.labelThirdActionInfo.Size = new System.Drawing.Size(951, 25);
+            this.labelThirdActionInfo.Size = new System.Drawing.Size(1021, 25);
             this.labelThirdActionInfo.TabIndex = 8;
-            this.labelThirdActionInfo.Text = "Третье действие: асинхронно генерирует случайное число и показывает, четное оно и" +
-    "ли нет";
+            this.labelThirdActionInfo.Text = "Третье действие: асинхронно генерирует псевдослучайное число и показывает, четное" +
+    " оно или нет";
             // 
             // labelThirdActionResult
             // 
             this.labelThirdActionResult.AutoSize = true;
             this.labelThirdActionResult.Location = new System.Drawing.Point(28, 464);
             this.labelThirdActionResult.Name = "labelThirdActionResult";
-            this.labelThirdActionResult.Size = new System.Drawing.Size(199, 25);
+            this.labelThirdActionResult.Size = new System.Drawing.Size(192, 25);
             this.labelThirdActionResult.TabIndex = 9;
-            this.labelThirdActionResult.Text = "Третье действие: -";
+            this.labelThirdActionResult.Text = "Третье действие: ";
             // 
             // AsyncMethodsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 561);
+            this.ClientSize = new System.Drawing.Size(1079, 598);
             this.Controls.Add(this.labelInfoTop);
             this.Controls.Add(this.labelThirdActionInfo);
             this.Controls.Add(this.labelThirdActionResult);
