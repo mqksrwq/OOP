@@ -1,102 +1,302 @@
+using System.Runtime.InteropServices;
+using System.ComponentModel;
+
 namespace Lab7;
 
-/// <summary>
-/// Главное окно приложения (View).
-/// </summary>
-public partial class FormMain : Form, IMainView
+public partial class FormMain : Form, IHotelView
 {
-    /// <summary>
-    /// Экран для отображения дерева групп и гостиниц.
-    /// </summary>
-    private readonly HotelsTreeViewControl _mainView;
+    private readonly HotelController _controller;
 
-    /// <summary>
-    /// Экран для работы с гостиницами.
-    /// </summary>
-    private readonly HotelViewControl _hotelView;
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
 
-    /// <summary>
-    /// Экран для работы с группами.
-    /// </summary>
-    private readonly GroupViewControl _groupView;
+    private const uint MB_OK = 0x00000000;
+    private const uint MB_ICONERROR = 0x00000010;
+    private const uint MB_ICONWARNING = 0x00000030;
 
-    /// <summary>
-    /// Контроллер главного окна (навигация между экранами).
-    /// </summary>
-    private readonly MainController _mainController;
+    public event EventHandler? CreateRequested;
+    public event EventHandler? ApplyRequested;
+    public event EventHandler? CancelRequested;
+    public event EventHandler? ExitRequested;
+    public event EventHandler<HotelSelectedEventArgs>? EditRequested;
 
-    /// <summary>
-    /// Контроллер формы гостиниц.
-    /// </summary>
-    private readonly HotelController _hotelController;
-
-    /// <summary>
-    /// Контроллер формы групп.
-    /// </summary>
-    private readonly GroupController _groupController;
-
-    /// <summary>
-    /// Событие запроса показа главного экрана.
-    /// </summary>
-    public event EventHandler? MainViewRequested;
-
-    /// <summary>
-    /// Событие запроса показа экрана гостиниц.
-    /// </summary>
-    public event EventHandler? HotelViewRequested;
-
-    /// <summary>
-    /// Событие запроса показа экрана групп.
-    /// </summary>
-    public event EventHandler? GroupViewRequested;
-
-    /// <summary>
-    /// Инициализирует главное окно приложения.
-    /// </summary>
     public FormMain()
     {
         InitializeComponent();
-
         MessageBox.Show(this,
-            "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f \u21167 - \u0412\u0430\u0440\u0438\u0430\u043d\u0442 9 (\u0413\u043e\u0441\u0442\u0438\u043d\u0438\u0446\u0430, MVC)\n\n\u0413\u0440\u0443\u043f\u043f\u0430 24\u0412\u041f1 - \u0421\u0442\u0443\u0434\u0435\u043d\u0442\u044b: \u0411\u043e\u044f\u0440\u043a\u0438\u043d \u041c\u0430\u043a\u0441\u0438\u043c \u0438 \u041c\u0438\u0448\u0438\u043d \u0410\u0440\u0442\u0451\u043c",
-            "\u041f\u0440\u0438\u0432\u0435\u0442!!");
+            "Лабораторная №7 - Вариант 9 (Гостиница, MVC)\n\nГруппа 24ВП1 - Студенты: Бояркин Максим и Мишин Артём",
+            "Привет!!");
 
-        _mainView = new HotelsTreeViewControl();
-        _hotelView = new HotelViewControl();
-        _groupView = new GroupViewControl();
+        MinimumSize = Size;
+        MaximumSize = Size;
 
-        _hotelController = new HotelController(_hotelView);
-        _groupController = new GroupController(_groupView);
-        _mainController = new MainController(this, _mainView, _hotelView, _groupView);
-
-        menuItemMain.Click += (_, _) => MainViewRequested?.Invoke(this, EventArgs.Empty);
-        menuItemHotel.Click += (_, _) => HotelViewRequested?.Invoke(this, EventArgs.Empty);
-        menuItemGroup.Click += (_, _) => GroupViewRequested?.Invoke(this, EventArgs.Empty);
-
-        MainViewRequested?.Invoke(this, EventArgs.Empty);
+        _controller = new HotelController(this);
     }
 
-    /// <summary>
-    /// Обновляет состояние пунктов меню.
-    /// </summary>
-    /// <param name="isMainActive">Активен ли пункт «Главная».</param>
-    /// <param name="isHotelActive">Активен ли пункт «Гостиница».</param>
-    /// <param name="isGroupActive">Активен ли пункт «Группа».</param>
-    public void SetMenuState(bool isMainActive, bool isHotelActive, bool isGroupActive)
+    private void buttonCreate_Click(object sender, EventArgs e)
     {
-        menuItemMain.Checked = isMainActive;
-        menuItemHotel.Checked = isHotelActive;
-        menuItemGroup.Checked = isGroupActive;
+        CreateRequested?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>
-    /// Показывает указанный экран в центральной области формы.
-    /// </summary>
-    /// <param name="view">Отображаемый пользовательский контрол.</param>
-    public void ShowView(UserControl view)
+    private void buttonApply_Click(object sender, EventArgs e)
     {
-        panelContent.Controls.Clear();
-        view.Dock = DockStyle.Fill;
-        panelContent.Controls.Add(view);
+        ApplyRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void buttonCancel_Click(object sender, EventArgs e)
+    {
+        CancelRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void buttonExit_Click(object sender, EventArgs e)
+    {
+        ExitRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void ShowError(string message, string title = "Ошибка")
+    {
+        MessageBoxW(Handle, message, title, MB_OK | MB_ICONERROR);
+    }
+
+    public void ShowWarning(string message, string title = "Предупреждение")
+    {
+        MessageBoxW(Handle, message, title, MB_OK | MB_ICONWARNING);
+    }
+
+    public bool TryGetHotelFromForm(out HotelFormInput input)
+    {
+        input = default;
+        try
+        {
+            string name = textBoxName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                ShowError("Введите название гостиницы.");
+                textBoxName.Select();
+                return false;
+            }
+
+            if (!SafeParseInt(textBoxOccupiedRooms.Text.Trim(), "Заселено мест", out int occupiedRooms))
+            {
+                textBoxOccupiedRooms.Select();
+                return false;
+            }
+
+            if (!SafeParseInt(textBoxTotalRooms.Text.Trim(), "Общее число мест", out int totalRooms))
+            {
+                textBoxTotalRooms.Select();
+                return false;
+            }
+
+            if (occupiedRooms > totalRooms)
+            {
+                ShowError("'Заселено мест' не может быть больше, чем 'Общее число мест'.");
+                textBoxOccupiedRooms.Select();
+                return false;
+            }
+
+            if (!SafeParseDecimal(textBoxPricePerDay.Text.Trim(), "Оплата за день", out decimal pricePerDay))
+            {
+                textBoxPricePerDay.Select();
+                return false;
+            }
+
+            string address = textBoxAddress.Text.Trim();
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                ShowError("Введите адрес гостиницы.");
+                textBoxAddress.Select();
+                return false;
+            }
+
+            if (!SafeParseDouble(textBoxRating.Text.Trim(), "Рейтинг", out double rating))
+            {
+                textBoxRating.Select();
+                return false;
+            }
+
+            if (rating < 0 || rating > 10)
+            {
+                ShowError("Неверное значение для 'Рейтинг'. Введите число от 0 до 10.");
+                textBoxRating.Select();
+                return false;
+            }
+
+            input = new HotelFormInput(name, occupiedRooms, totalRooms, pricePerDay, address, rating,
+                checkBoxHasFreeWiFi.Checked);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Ошибка ввода: {ex.Message}");
+            return false;
+        }
+    }
+
+    public void FillForm(Hotel hotel)
+    {
+        textBoxName.Text = hotel.Name;
+        textBoxOccupiedRooms.Text = hotel.OccupiedRooms.ToString();
+        textBoxTotalRooms.Text = hotel.TotalRooms.ToString();
+        textBoxPricePerDay.Text = hotel.PricePerDay.ToString();
+        textBoxAddress.Text = hotel.Address;
+        textBoxRating.Text = hotel.Rating.ToString();
+        checkBoxHasFreeWiFi.Checked = hotel.HasFreeWiFi;
+    }
+
+    public void RenderHotels()
+    {
+        flowHotels.Controls.Clear();
+
+        foreach (Hotel hotel in Hotel.Hotels)
+        {
+            Panel card = new();
+            card.Width = 230;
+            card.Height = 150;
+            card.BorderStyle = BorderStyle.FixedSingle;
+            card.Margin = new Padding(0, 0, 0, 10);
+
+            Label info = new();
+            info.Text = hotel.ToString();
+            info.AutoSize = false;
+            info.MaximumSize = new Size(card.ClientSize.Width - 16, 0);
+            info.Location = new Point(8, 8);
+            info.AutoSize = true;
+
+            Button btnEdit = new();
+            btnEdit.Text = "Изменить";
+            btnEdit.Width = 100;
+
+            int padding = 8;
+            btnEdit.Location = new Point(
+                card.ClientSize.Width - btnEdit.Width - padding,
+                card.ClientSize.Height - btnEdit.Height - padding
+            );
+
+            btnEdit.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
+            btnEdit.Click += (_, _) => EditRequested?.Invoke(this, new HotelSelectedEventArgs(hotel));
+
+            card.Controls.Add(info);
+            card.Controls.Add(btnEdit);
+            flowHotels.Controls.Add(card);
+        }
+    }
+
+    public void SetEditMode(bool enabled)
+    {
+        buttonCreate.Visible = !enabled;
+        buttonApply.Visible = enabled;
+        buttonCancel.Visible = enabled;
+    }
+
+    public void ClearFormFields()
+    {
+        textBoxName.Clear();
+        textBoxOccupiedRooms.Clear();
+        textBoxTotalRooms.Clear();
+        textBoxPricePerDay.Clear();
+        textBoxAddress.Clear();
+        textBoxRating.Clear();
+        checkBoxHasFreeWiFi.Checked = false;
+    }
+
+    public void CloseView()
+    {
+        Close();
+    }
+
+    private bool SafeParseInt(string text, string fieldName, out int result)
+    {
+        text = text.Trim();
+        try
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                ShowError($"Введите значение для '{fieldName}'.");
+                result = 0;
+                return false;
+            }
+
+            result = checked(int.Parse(text));
+            if (result < 0)
+            {
+                ShowWarning($"Для '{fieldName}' введите число ≥ 0.");
+                result = 0;
+                return false;
+            }
+
+            return true;
+        }
+        catch (OverflowException)
+        {
+            throw new HotelOverflowException(fieldName, text);
+        }
+        catch (FormatException)
+        {
+            ShowError($"Неверный формат числа в '{fieldName}'.");
+            result = 0;
+            return false;
+        }
+    }
+
+    private bool SafeParseDecimal(string text, string fieldName, out decimal result)
+    {
+        text = text.Trim();
+        try
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                ShowError($"Введите значение для '{fieldName}'.");
+                result = 0;
+                return false;
+            }
+
+            result = checked(decimal.Parse(text));
+            if (result < 0)
+            {
+                ShowWarning($"Для '{fieldName}' введите число ≥ 0.");
+                result = 0;
+                return false;
+            }
+
+            return true;
+        }
+        catch (OverflowException)
+        {
+            throw new HotelOverflowException(fieldName, text);
+        }
+        catch (FormatException)
+        {
+            ShowError($"Неверный формат числа в '{fieldName}'.");
+            result = 0;
+            return false;
+        }
+    }
+
+    private bool SafeParseDouble(string text, string fieldName, out double result)
+    {
+        text = text.Trim();
+        try
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                ShowError($"Введите значение для '{fieldName}'.");
+                result = 0;
+                return false;
+            }
+
+            result = double.Parse(text);
+            return true;
+        }
+        catch (OverflowException)
+        {
+            throw new HotelOverflowException(fieldName, text);
+        }
+        catch (FormatException)
+        {
+            ShowError($"Неверный формат числа в '{fieldName}'.");
+            result = 0;
+            return false;
+        }
     }
 }

@@ -1,52 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Lab8;
+﻿namespace Lab8;
 
 /// <summary>
-/// Класс гостиницы (лист в паттерне Composite)
+/// Класс гостиницы
 /// </summary>
-public class Hotel : IHotelComponent
+public class Hotel
 {
-    /// <summary>
-    /// Название гостиницы.
-    /// </summary>
+    // Свойства класса
     public string Name { get; set; }
-
-    /// <summary>
-    /// Количество занятых номеров.
-    /// </summary>
     public int OccupiedRooms { get; set; }
-
-    /// <summary>
-    /// Общее количество номеров.
-    /// </summary>
     public int TotalRooms { get; set; }
-
-    /// <summary>
-    /// Стоимость проживания за сутки.
-    /// </summary>
     public decimal PricePerDay { get; set; }
-
-    /// <summary>
-    /// Адрес гостиницы.
-    /// </summary>
     public string Address { get; set; }
-
-    /// <summary>
-    /// Рейтинг гостиницы.
-    /// </summary>
     public double Rating { get; set; }
-
-    /// <summary>
-    /// Признак наличия бесплатного Wi‑Fi.
-    /// </summary>
     public bool HasFreeWiFi { get; set; }
 
-    /// <summary>
-    /// Количество созданных экземпляров гостиницы.
-    /// </summary>
+    // Счетчик гостиниц
     public static int InstanceCount { get; private set; }
+
+    // Список гостиниц
+    public static List<Hotel> Hotels = new();
 
     /// <summary>
     /// Конструктор без параметров
@@ -61,6 +33,7 @@ public class Hotel : IHotelComponent
         Rating = 3.5;
         HasFreeWiFi = true;
         InstanceCount++;
+        Hotels.Add(this);
     }
 
     /// <summary>
@@ -92,8 +65,8 @@ public class Hotel : IHotelComponent
     /// <param name="address"> Адрес </param>
     /// <param name="rating"> Рейтинг </param>
     /// <param name="hasFreeWiFi"> Наличие бесплатного WiFi </param>
-    public Hotel(string name, int occupiedRooms, int totalRooms, decimal pricePerDay, string address, double rating,
-        bool hasFreeWiFi)
+    public Hotel(string name, int occupiedRooms, int totalRooms, decimal pricePerDay,
+        string address, double rating, bool hasFreeWiFi)
     {
         Name = name;
         OccupiedRooms = occupiedRooms;
@@ -102,6 +75,9 @@ public class Hotel : IHotelComponent
         Address = address;
         Rating = rating;
         HasFreeWiFi = hasFreeWiFi;
+
+        InstanceCount++;
+        Hotels.Add(this);
     }
 
     /// <summary>
@@ -118,46 +94,6 @@ public class Hotel : IHotelComponent
     }
 
     /// <summary>
-    /// Возвращает описание гостиницы с отступом
-    /// </summary>
-    /// <param name="indent">Количество пробелов для отступа</param>
-    /// <returns>Строковое описание гостиницы</returns>
-    public string Describe(int indent = 0)
-    {
-        var pad = new string(' ', Math.Max(0, indent));
-        return pad + ToString();
-    }
-
-    /// <summary>
-    /// Не поддерживается для одиночной гостиницы
-    /// </summary>
-    /// <param name="component">Добавляемый компонент</param>
-    public void Add(IHotelComponent component) =>
-        throw new NotSupportedException("Нельзя добавить компонент к листу Hotel.");
-
-    /// <summary>
-    /// Не поддерживается для одиночной гостиницы
-    /// </summary>
-    /// <param name="name">Имя удаляемого компонента</param>
-    /// <returns>Всегда выбрасывает исключение</returns>
-    public bool Remove(string name) =>
-        throw new NotSupportedException("Удаление не поддерживается листом.");
-
-    /// <summary>
-    /// Возвращает текущую гостиницу, если имена совпадают
-    /// </summary>
-    /// <param name="name">Имя для поиска</param>
-    /// <returns>Найденный компонент или null</returns>
-    public IHotelComponent? Find(string name)
-    {
-        return Name == name ? this : null;
-    }
-
-    /// <summary>
-    /// Пустая коллекция дочерних элементов для одиночной гостиницы
-    /// </summary>
-    public IEnumerable<IHotelComponent> Children => Array.Empty<IHotelComponent>();
-
     /// <summary>
     /// Метод для вывода значения определенного поля
     /// </summary>
@@ -192,7 +128,7 @@ public class Hotel : IHotelComponent
     /// </summary>
     /// <param name="fieldName"> Название поля </param>
     /// <param name="newValue"> Новое значение поля </param>
-    /// <returns> Статус об изменении </returns>
+    /// <returns> Статус о изменении </returns>
     public bool SetFieldValue(string fieldName, string newValue)
     {
         try

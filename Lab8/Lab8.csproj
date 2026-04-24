@@ -1,1 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net9.0-windows</TargetFramework><UseWindowsForms>true</UseWindowsForms><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><GenerateAssemblyInfo>false</GenerateAssemblyInfo></PropertyGroup><ItemGroup><Compile Remove="obj\**\*.cs" /><None Include="App.config" /></ItemGroup></Project>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="FormMain.cs" />
+    <Compile Include="FormMain.Designer.cs" />
+    <Compile Include="Hotel.cs" />
+    <Compile Include="HotelOverflowException.cs" />
+    <Compile Include="Mvp\IHotelView.cs" />
+    <Compile Include="Mvp\HotelPresenter.cs" />
+  </ItemGroup>
+</Project>

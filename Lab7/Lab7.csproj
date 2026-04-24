@@ -5,10 +5,15 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="obj\**\*.cs" />
-    <None Include="App.config" />
+    <Compile Include="Program.cs" />
+    <Compile Include="FormMain.cs" />
+    <Compile Include="FormMain.Designer.cs" />
+    <Compile Include="Hotel.cs" />
+    <Compile Include="HotelOverflowException.cs" />
+    <Compile Include="Mvc\IHotelView.cs" />
+    <Compile Include="Mvc\HotelController.cs" />
   </ItemGroup>
 </Project>

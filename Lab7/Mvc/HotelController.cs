@@ -1,124 +1,103 @@
-﻿using Lab7.Operations;
+﻿namespace Lab7;
 
-namespace Lab7;
-
-/// <summary>
-/// Контроллер экрана гостиницы.
-/// Содержит логику поиска, создания и сохранения гостиниц в паттерне MVC.
-/// </summary>
 public sealed class HotelController
 {
-    /// <summary>
-    /// Представление формы гостиницы.
-    /// </summary>
     private readonly IHotelView _view;
+    private Hotel? _editingHotel;
 
-    /// <summary>
-    /// Текущая группа найденной гостиницы.
-    /// </summary>
-    private HotelsHashtableCollection? _currentGroup;
-
-    /// <summary>
-    /// Текущая найденная гостиница для редактирования.
-    /// </summary>
-    private Hotel? _currentHotel;
-
-    /// <summary>
-    /// Инициализирует контроллер и подписывает обработчики событий представления.
-    /// </summary>
-    /// <param name="view">Представление формы гостиницы.</param>
     public HotelController(IHotelView view)
     {
         _view = view;
-
-        _view.CreateHotelRequested += (_, _) =>
-            new CreateHotelOperation(_view.ReadFormData(), AfterSave).Execute();
-
-        _view.SaveHotelRequested += (_, _) =>
-            new SaveHotelOperation(_currentGroup, _currentHotel, _view.ReadFormData(), AfterSave).Execute();
-
-        _view.FindHotelRequested += (_, _) => FindHotel();
-
-        _view.ClearRequested += (_, _) => ResetFormState();
+        _view.CreateRequested += (_, _) => CreateHotel();
+        _view.ApplyRequested += (_, _) => ApplyEdit();
+        _view.CancelRequested += (_, _) => ExitEditMode();
+        _view.ExitRequested += (_, _) => _view.CloseView();
+        _view.EditRequested += (_, e) => StartEditHotel(e.Hotel);
     }
 
-    /// <summary>
-    /// Выполняет поиск гостиницы по имени и подготавливает форму к редактированию.
-    /// </summary>
-    private void FindHotel()
+    private void CreateHotel()
     {
-        var search = _view.SearchText.Trim();
-        if (string.IsNullOrWhiteSpace(search))
+        try
         {
-            _view.ShowInfo("Введите имя гостиницы для поиска.");
-            return;
-        }
-
-        var root = HotelAppState.Instance.Hotels;
-        if (!TryFindHotelWithParent(root, search, out var group, out var hotel))
-        {
-            _view.ShowInfo("Гостиница не найдена.");
-            return;
-        }
-
-        _currentGroup = group;
-        _currentHotel = hotel;
-        _view.FillForm(group, hotel);
-        _view.SetSaveEnabled(true);
-    }
-
-    /// <summary>
-    /// Сбрасывает состояние формы после успешной операции сохранения/создания.
-    /// </summary>
-    private void AfterSave()
-    {
-        _view.ClearForm();
-        _currentGroup = null;
-        _currentHotel = null;
-        _view.SetSaveEnabled(false);
-    }
-
-    /// <summary>
-    /// Полностью очищает форму и внутреннее состояние контроллера.
-    /// </summary>
-    private void ResetFormState()
-    {
-        _view.ClearForm();
-        _currentGroup = null;
-        _currentHotel = null;
-        _view.SetSaveEnabled(false);
-    }
-
-    /// <summary>
-    /// Рекурсивно ищет гостиницу и возвращает группу-родителя найденного отеля.
-    /// </summary>
-    /// <param name="root">Корневая группа поиска.</param>
-    /// <param name="name">Имя гостиницы.</param>
-    /// <param name="group">Найденная родительская группа.</param>
-    /// <param name="hotel">Найденная гостиница.</param>
-    /// <returns><c>true</c>, если гостиница найдена; иначе <c>false</c>.</returns>
-    private static bool TryFindHotelWithParent(HotelsHashtableCollection root, string name,
-        out HotelsHashtableCollection group, out Hotel hotel)
-    {
-        foreach (var child in root.Children)
-        {
-            if (child is Hotel h && h.Name == name)
+            if (!_view.TryGetHotelFromForm(out var input))
             {
-                group = root;
-                hotel = h;
-                return true;
+                return;
             }
 
-            if (child is HotelsHashtableCollection nested &&
-                TryFindHotelWithParent(nested, name, out group, out hotel))
-            {
-                return true;
-            }
+            _ = new Hotel(input.Name, input.OccupiedRooms, input.TotalRooms, input.PricePerDay,
+                input.Address, input.Rating, input.HasFreeWiFi);
+            _view.RenderHotels();
+            _view.ClearFormFields();
         }
+        catch (HotelOverflowException ex)
+        {
+            _view.ShowError(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _view.ShowWarning($"Ошибка создания гостиницы: {ex.Message}");
+        }
+    }
 
-        group = null!;
-        hotel = null!;
-        return false;
+    private void ApplyEdit()
+    {
+        try
+        {
+            if (_editingHotel == null)
+            {
+                return;
+            }
+
+            if (!_view.TryGetHotelFromForm(out var input))
+            {
+                return;
+            }
+
+            _editingHotel.Name = input.Name;
+            _editingHotel.OccupiedRooms = input.OccupiedRooms;
+            _editingHotel.TotalRooms = input.TotalRooms;
+            _editingHotel.PricePerDay = input.PricePerDay;
+            _editingHotel.Address = input.Address;
+            _editingHotel.Rating = input.Rating;
+            _editingHotel.HasFreeWiFi = input.HasFreeWiFi;
+
+            ExitEditMode();
+            _view.RenderHotels();
+        }
+        catch (HotelOverflowException ex)
+        {
+            _view.ShowError(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _view.ShowError($"Ошибка редактирования гостиницы: {ex.Message}");
+        }
+    }
+
+    private void StartEditHotel(Hotel hotel)
+    {
+        try
+        {
+            _editingHotel = hotel;
+            _view.FillForm(hotel);
+
+            _view.SetEditMode(true);
+        }
+        catch (HotelOverflowException ex)
+        {
+            _view.ShowError(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _view.ShowError($"Ошибка редактирования гостиницы: {ex.Message}");
+        }
+    }
+
+    private void ExitEditMode()
+    {
+        _editingHotel = null;
+        _view.ClearFormFields();
+        _view.SetEditMode(false);
     }
 }
 

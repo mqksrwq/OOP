@@ -1,67 +1,58 @@
-﻿using System;
-using Lab7.Operations;
-
-namespace Lab7;
+﻿namespace Lab7;
 
 /// <summary>
 /// Контракт представления формы гостиницы в MVC.
 /// </summary>
 public interface IHotelView
 {
-    /// <summary>
-    /// Событие запроса создания гостиницы.
-    /// </summary>
-    event EventHandler? CreateHotelRequested;
+    event EventHandler? CreateRequested;
+    event EventHandler? ApplyRequested;
+    event EventHandler? CancelRequested;
+    event EventHandler? ExitRequested;
+    event EventHandler<HotelSelectedEventArgs>? EditRequested;
 
-    /// <summary>
-    /// Событие запроса сохранения изменений гостиницы.
-    /// </summary>
-    event EventHandler? SaveHotelRequested;
+    bool TryGetHotelFromForm(out HotelFormInput input);
+    void FillForm(Hotel hotel);
 
-    /// <summary>
-    /// Событие запроса поиска гостиницы.
-    /// </summary>
-    event EventHandler? FindHotelRequested;
+    void ShowError(string message, string title = "Ошибка");
+    void ShowWarning(string message, string title = "Предупреждение");
+    void RenderHotels();
+    void SetEditMode(bool enabled);
+    void ClearFormFields();
+    void CloseView();
+}
 
-    /// <summary>
-    /// Событие запроса очистки формы.
-    /// </summary>
-    event EventHandler? ClearRequested;
+public sealed class HotelSelectedEventArgs : EventArgs
+{
+    public HotelSelectedEventArgs(Hotel hotel)
+    {
+        Hotel = hotel;
+    }
 
-    /// <summary>
-    /// Текст поиска гостиницы.
-    /// </summary>
-    string SearchText { get; }
+    public Hotel Hotel { get; }
+}
 
-    /// <summary>
-    /// Считывает данные формы в DTO.
-    /// </summary>
-    /// <returns>Данные формы гостиницы.</returns>
-    HotelFormData ReadFormData();
+public readonly struct HotelFormInput
+{
+    public HotelFormInput(string name, int occupiedRooms, int totalRooms, decimal pricePerDay,
+        string address, double rating, bool hasFreeWiFi)
+    {
+        Name = name;
+        OccupiedRooms = occupiedRooms;
+        TotalRooms = totalRooms;
+        PricePerDay = pricePerDay;
+        Address = address;
+        Rating = rating;
+        HasFreeWiFi = hasFreeWiFi;
+    }
 
-    /// <summary>
-    /// Заполняет поля формы данными найденной гостиницы.
-    /// </summary>
-    /// <param name="group">Группа гостиницы.</param>
-    /// <param name="hotel">Гостиница.</param>
-    void FillForm(HotelsHashtableCollection group, Hotel hotel);
-
-    /// <summary>
-    /// Очищает поля формы.
-    /// </summary>
-    void ClearForm();
-
-    /// <summary>
-    /// Включает или отключает кнопку сохранения.
-    /// </summary>
-    /// <param name="enabled">Доступность кнопки.</param>
-    void SetSaveEnabled(bool enabled);
-
-    /// <summary>
-    /// Показывает информационное сообщение пользователю.
-    /// </summary>
-    /// <param name="message">Текст сообщения.</param>
-    void ShowInfo(string message);
+    public string Name { get; }
+    public int OccupiedRooms { get; }
+    public int TotalRooms { get; }
+    public decimal PricePerDay { get; }
+    public string Address { get; }
+    public double Rating { get; }
+    public bool HasFreeWiFi { get; }
 }
 
 
