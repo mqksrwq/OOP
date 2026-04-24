@@ -14,5 +14,8 @@
     <Compile Update="HotelViewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="StartupModeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
