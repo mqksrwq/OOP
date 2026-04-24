@@ -1,5 +1,5 @@
-using System;
 using System.Globalization;
+using Lab8.Operations;
 
 namespace Lab8;
 
@@ -57,10 +57,10 @@ internal static class ConsoleMenu
     private static void CreateGroup(HotelsHashtableCollection root)
     {
         Console.Write("Название новой группы: ");
-        var name = (Console.ReadLine() ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(name))
+        var nameInput = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeName(nameInput, "Название группы", 60, out var name, out var error))
         {
-            Console.WriteLine("Название группы не может быть пустым.");
+            Console.WriteLine(error);
             return;
         }
 
@@ -71,7 +71,8 @@ internal static class ConsoleMenu
         }
 
         Console.Write("Родительская группа (Enter = корневая): ");
-        var parentName = (Console.ReadLine() ?? string.Empty).Trim();
+        var parentInput = Console.ReadLine();
+        var parentName = string.IsNullOrWhiteSpace(parentInput) ? string.Empty : parentInput.Trim();
 
         var parentGroup = ResolveGroup(root, parentName);
         if (parentGroup == null)
@@ -94,7 +95,14 @@ internal static class ConsoleMenu
     private static void CreateHotel(HotelsHashtableCollection root)
     {
         Console.Write("Группа: ");
-        var groupName = (Console.ReadLine() ?? string.Empty).Trim();
+        var groupInput = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeName(groupInput, "Название группы", 60, out var groupName,
+                out var groupError))
+        {
+            Console.WriteLine(groupError);
+            return;
+        }
+
         var group = ResolveGroup(root, groupName);
         if (group == null)
         {
@@ -103,10 +111,10 @@ internal static class ConsoleMenu
         }
 
         Console.Write("Название гостиницы: ");
-        var name = (Console.ReadLine() ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(name))
+        var nameInput = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeName(nameInput, "Название гостиницы", 80, out var name, out var nameError))
         {
-            Console.WriteLine("Название не может быть пустым.");
+            Console.WriteLine(nameError);
             return;
         }
 
@@ -117,21 +125,22 @@ internal static class ConsoleMenu
         }
 
         Console.Write("Адрес: ");
-        var address = (Console.ReadLine() ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(address))
-            address = "Адрес не задан";
+        var addressInput = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeAddress(addressInput, out var address, out var addressError))
+        {
+            Console.WriteLine(addressError);
+            return;
+        }
 
-        var total = ReadInt("Всего мест: ");
-        var occupied = ReadInt("Заселено: ");
-        var price = ReadDecimal("Цена за день: ");
-        var rating = ReadDouble("Рейтинг: ");
+        var total = ReadPositiveInt("Всего мест: ");
+        var occupied = ReadOccupiedInt("Заселено: ", total);
+        var price = ReadPositiveDecimal("Цена за день: ");
+        var rating = ReadRating("Рейтинг: ");
         var hasWifi = ReadYesNo("Бесплатный Wi-Fi (y/n): ");
-
-        var hotel = new Hotel(name, occupied, total, price, address, rating, hasWifi);
 
         try
         {
-            group.Add(hotel);
+            group.Add(new Hotel(name, occupied, total, price, address, rating, hasWifi));
             Console.WriteLine("Гостиница создана.");
         }
         catch (Exception ex)
@@ -143,11 +152,17 @@ internal static class ConsoleMenu
     private static void FindHotel(HotelsHashtableCollection root)
     {
         Console.Write("Название гостиницы: ");
-        var name = (Console.ReadLine() ?? string.Empty).Trim();
+        var input = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeName(input, "Название гостиницы", 80, out var name, out var error))
+        {
+            Console.WriteLine(error);
+            return;
+        }
+
         if (TryFindHotelWithParent(root, name, out var group, out var hotel))
         {
             Console.WriteLine($"Группа: {group.Name}");
-            Console.WriteLine(hotel.ToString());
+            Console.WriteLine(hotel);
             return;
         }
 
@@ -157,9 +172,14 @@ internal static class ConsoleMenu
     private static void EditHotel(HotelsHashtableCollection root)
     {
         Console.Write("Название гостиницы для изменения: ");
-        var name = (Console.ReadLine() ?? string.Empty).Trim();
+        var input = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeName(input, "Название гостиницы", 80, out var searchName, out var searchError))
+        {
+            Console.WriteLine(searchError);
+            return;
+        }
 
-        if (!TryFindHotelWithParent(root, name, out var currentGroup, out var currentHotel))
+        if (!TryFindHotelWithParent(root, searchName, out var currentGroup, out var currentHotel))
         {
             Console.WriteLine("Гостиница не найдена.");
             return;
@@ -167,16 +187,16 @@ internal static class ConsoleMenu
 
         Console.WriteLine("Нажмите Enter, чтобы оставить текущее значение.");
 
-        var targetGroup = PromptString($"Группа [{currentGroup.Name}]: ", currentGroup.Name);
-        var newName = PromptString($"Название [{currentHotel.Name}]: ", currentHotel.Name);
-        var address = PromptString($"Адрес [{currentHotel.Address}]: ", currentHotel.Address);
-        var total = PromptInt($"Всего мест [{currentHotel.TotalRooms}]: ", currentHotel.TotalRooms);
-        var occupied = PromptInt($"Заселено [{currentHotel.OccupiedRooms}]: ", currentHotel.OccupiedRooms);
-        var price = PromptDecimal($"Цена за день [{currentHotel.PricePerDay}]: ", currentHotel.PricePerDay);
-        var rating = PromptDouble($"Рейтинг [{currentHotel.Rating}]: ", currentHotel.Rating);
+        var targetGroupName = PromptGroupName($"Группа [{currentGroup.Name}]: ", currentGroup.Name);
+        var newName = PromptHotelName($"Название [{currentHotel.Name}]: ", currentHotel.Name);
+        var address = PromptAddress($"Адрес [{currentHotel.Address}]: ", currentHotel.Address);
+        var total = PromptTotal($"Всего мест [{currentHotel.TotalRooms}]: ", currentHotel.TotalRooms);
+        var occupied = PromptOccupied($"Заселено [{currentHotel.OccupiedRooms}]: ", currentHotel.OccupiedRooms, total);
+        var price = PromptPrice($"Цена за день [{currentHotel.PricePerDay}]: ", currentHotel.PricePerDay);
+        var rating = PromptRating($"Рейтинг [{currentHotel.Rating}]: ", currentHotel.Rating);
         var hasWifi = PromptBool($"Wi-Fi (y/n) [{(currentHotel.HasFreeWiFi ? "y" : "n")}]: ", currentHotel.HasFreeWiFi);
 
-        var destination = ResolveGroup(root, targetGroup);
+        var destination = ResolveGroup(root, targetGroupName);
         if (destination == null)
         {
             Console.WriteLine("Целевая группа не найдена.");
@@ -189,12 +209,10 @@ internal static class ConsoleMenu
             return;
         }
 
-        var updated = new Hotel(newName, occupied, total, price, address, rating, hasWifi);
-
         try
         {
             currentGroup.Remove(currentHotel.Name);
-            destination.Add(updated);
+            destination.Add(new Hotel(newName, occupied, total, price, address, rating, hasWifi));
             Console.WriteLine("Изменения сохранены.");
         }
         catch (Exception ex)
@@ -206,11 +224,10 @@ internal static class ConsoleMenu
     private static void RemoveComponent(HotelsHashtableCollection root)
     {
         Console.Write("Имя компонента для удаления: ");
-        var name = (Console.ReadLine() ?? string.Empty).Trim();
-
-        if (string.IsNullOrWhiteSpace(name))
+        var input = Console.ReadLine();
+        if (!FieldValidation.TryNormalizeName(input, "Имя компонента", 80, out var name, out var error))
         {
-            Console.WriteLine("Имя не может быть пустым.");
+            Console.WriteLine(error);
             return;
         }
 
@@ -220,10 +237,7 @@ internal static class ConsoleMenu
             return;
         }
 
-        if (TryRemoveRecursive(root, name))
-            Console.WriteLine("Компонент удалён.");
-        else
-            Console.WriteLine("Компонент не найден.");
+        Console.WriteLine(TryRemoveRecursive(root, name) ? "Компонент удалён." : "Компонент не найден.");
     }
 
     private static bool TryRemoveRecursive(HotelsHashtableCollection collection, string name)
@@ -281,6 +295,38 @@ internal static class ConsoleMenu
         }
     }
 
+    private static int ReadPositiveInt(string prompt)
+    {
+        while (true)
+        {
+            var value = ReadInt(prompt);
+            if (value > 0)
+                return value;
+            Console.WriteLine("Значение должно быть больше 0.");
+        }
+    }
+
+    private static int ReadOccupiedInt(string prompt, int total)
+    {
+        while (true)
+        {
+            var value = ReadInt(prompt);
+            if (value < 0)
+            {
+                Console.WriteLine("Значение не может быть отрицательным.");
+                continue;
+            }
+
+            if (value > total)
+            {
+                Console.WriteLine("Заселено не может быть больше общего количества мест.");
+                continue;
+            }
+
+            return value;
+        }
+    }
+
     private static decimal ReadDecimal(string prompt)
     {
         while (true)
@@ -295,6 +341,17 @@ internal static class ConsoleMenu
         }
     }
 
+    private static decimal ReadPositiveDecimal(string prompt)
+    {
+        while (true)
+        {
+            var value = ReadDecimal(prompt);
+            if (value > 0)
+                return value;
+            Console.WriteLine("Значение должно быть больше 0.");
+        }
+    }
+
     private static double ReadDouble(string prompt)
     {
         while (true)
@@ -306,6 +363,17 @@ internal static class ConsoleMenu
                 return value;
 
             Console.WriteLine("Введите число (double).");
+        }
+    }
+
+    private static double ReadRating(string prompt)
+    {
+        while (true)
+        {
+            var value = ReadDouble(prompt);
+            if (value >= 0 && value <= 5)
+                return value;
+            Console.WriteLine("Рейтинг должен быть в диапазоне от 0 до 5.");
         }
     }
 
@@ -324,46 +392,49 @@ internal static class ConsoleMenu
         }
     }
 
-    private static string PromptString(string prompt, string currentValue)
-    {
-        Console.Write(prompt);
-        var input = Console.ReadLine();
-        return string.IsNullOrWhiteSpace(input) ? currentValue : input.Trim();
-    }
-
-    private static int PromptInt(string prompt, int currentValue)
+    private static string PromptGroupName(string prompt, string currentValue)
     {
         while (true)
         {
             Console.Write(prompt);
             var input = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(input))
-                return currentValue;
-            if (int.TryParse(input.Trim(), out var parsed))
-                return parsed;
-            Console.WriteLine("Введите целое число.");
+            var candidate = string.IsNullOrWhiteSpace(input) ? currentValue : input;
+            if (FieldValidation.TryNormalizeName(candidate, "Название группы", 60, out var normalized, out var error))
+                return normalized;
+
+            Console.WriteLine(error);
         }
     }
 
-    private static decimal PromptDecimal(string prompt, decimal currentValue)
+    private static string PromptHotelName(string prompt, string currentValue)
     {
         while (true)
         {
             Console.Write(prompt);
             var input = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(input))
-                return currentValue;
+            var candidate = string.IsNullOrWhiteSpace(input) ? currentValue : input;
+            if (FieldValidation.TryNormalizeName(candidate, "Название гостиницы", 80, out var normalized, out var error))
+                return normalized;
 
-            var text = input.Trim();
-            if (decimal.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out var parsed) ||
-                decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out parsed))
-                return parsed;
-
-            Console.WriteLine("Введите число (decimal).");
+            Console.WriteLine(error);
         }
     }
 
-    private static double PromptDouble(string prompt, double currentValue)
+    private static string PromptAddress(string prompt, string currentValue)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            var candidate = string.IsNullOrWhiteSpace(input) ? currentValue : input;
+            if (FieldValidation.TryNormalizeAddress(candidate, out var normalized, out var error))
+                return normalized;
+
+            Console.WriteLine(error);
+        }
+    }
+
+    private static int PromptTotal(string prompt, int currentValue)
     {
         while (true)
         {
@@ -372,12 +443,58 @@ internal static class ConsoleMenu
             if (string.IsNullOrWhiteSpace(input))
                 return currentValue;
 
-            var text = input.Trim();
-            if (double.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out var parsed) ||
-                double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out parsed))
-                return parsed;
+            if (FieldValidation.TryParseTotalRooms(input, out var value, out var error))
+                return value;
 
-            Console.WriteLine("Введите число (double).");
+            Console.WriteLine(error);
+        }
+    }
+
+    private static int PromptOccupied(string prompt, int currentValue, int total)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input))
+                return currentValue <= total ? currentValue : total;
+
+            if (FieldValidation.TryParseOccupiedRooms(input, total, out var value, out var error))
+                return value;
+
+            Console.WriteLine(error);
+        }
+    }
+
+    private static decimal PromptPrice(string prompt, decimal currentValue)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input))
+                return currentValue;
+
+            if (FieldValidation.TryParsePrice(input, out var value, out var error))
+                return value;
+
+            Console.WriteLine(error);
+        }
+    }
+
+    private static double PromptRating(string prompt, double currentValue)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input))
+                return currentValue;
+
+            if (FieldValidation.TryParseRating(input, out var value, out var error))
+                return value;
+
+            Console.WriteLine(error);
         }
     }
 

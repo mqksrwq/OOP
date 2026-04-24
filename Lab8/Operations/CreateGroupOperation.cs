@@ -24,6 +24,11 @@ public sealed class CreateGroupOperation : UiOperationTemplate
     private readonly Action? _afterSuccess;
 
     /// <summary>
+    /// Нормализованное имя создаваемой группы.
+    /// </summary>
+    private string _validatedName = string.Empty;
+
+    /// <summary>
     /// Группа, в которую будет добавлена новая группа.
     /// </summary>
     private HotelsHashtableCollection _parentGroup = null!;
@@ -52,14 +57,14 @@ public sealed class CreateGroupOperation : UiOperationTemplate
     /// <returns>Признак успешной валидации</returns>
     protected override bool Validate()
     {
-        if (string.IsNullOrWhiteSpace(_name))
+        if (!FieldValidation.TryNormalizeName(_name, "Название группы", 60, out _validatedName, out var error))
         {
-            MessageBox.Show("Введите название группы.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         var root = HotelAppState.Instance.Hotels;
-        if (root.Find(_name) != null)
+        if (root.Find(_validatedName) != null)
         {
             MessageBox.Show("Компонент с таким именем уже существует.", "Ошибка",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -87,7 +92,7 @@ public sealed class CreateGroupOperation : UiOperationTemplate
     /// </summary>
     protected override void ExecuteCore()
     {
-        _parentGroup.Add(new HotelsHashtableCollection(_name));
+        _parentGroup.Add(new HotelsHashtableCollection(_validatedName));
     }
 
     /// <summary>

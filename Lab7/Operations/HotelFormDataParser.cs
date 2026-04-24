@@ -19,10 +19,22 @@ internal static class HotelFormDataParser
         group = null;
         hotel = null;
 
-        var groupName = data.GroupName.Trim();
-        if (string.IsNullOrWhiteSpace(groupName))
+        if (!FieldValidation.TryNormalizeName(data.GroupName, "Название группы", 60, out var groupName,
+                out var error))
         {
-            MessageBox.Show("Введите название группы.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        if (!FieldValidation.TryNormalizeName(data.Name, "Название гостиницы", 80, out var hotelName, out error))
+        {
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        if (!FieldValidation.TryNormalizeAddress(data.Address, out var address, out error))
+        {
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -35,41 +47,37 @@ internal static class HotelFormDataParser
             return false;
         }
 
-        if (!int.TryParse(data.TotalRoomsText.Trim(), out int total))
+        if (!FieldValidation.TryParseTotalRooms(data.TotalRoomsText, out int total, out error))
         {
-            MessageBox.Show("Некорректное число в поле 'Всего мест'.", "Ошибка", MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
-        if (!int.TryParse(data.OccupiedRoomsText.Trim(), out int occupied))
+        if (!FieldValidation.TryParseOccupiedRooms(data.OccupiedRoomsText, total, out int occupied, out error))
         {
-            MessageBox.Show("Некорректное число в поле 'Заселено'.", "Ошибка", MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
-        if (!decimal.TryParse(data.PricePerDayText.Trim(), out decimal price))
+        if (!FieldValidation.TryParsePrice(data.PricePerDayText, out decimal price, out error))
         {
-            MessageBox.Show("Некорректное число в поле 'Цена/день'.", "Ошибка", MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
-        if (!double.TryParse(data.RatingText.Trim(), out double rating))
+        if (!FieldValidation.TryParseRating(data.RatingText, out double rating, out error))
         {
-            MessageBox.Show("Некорректное число в поле 'Рейтинг'.", "Ошибка", MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         group = resolvedGroup;
         hotel = new Hotel(
-            data.Name.Trim(),
+            hotelName,
             occupied,
             total,
             price,
-            data.Address.Trim(),
+            address,
             rating,
             data.HasFreeWiFi
         );
